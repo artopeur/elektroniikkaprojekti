@@ -3,7 +3,7 @@ Koulun elektroniikkaprojekti
 
 ## Projektin aikataulu
 viikko 11 
-- projektin aloitus
+- projektin aloitus hei!
 
 viikko 12 
 - projektin suunnitelma
