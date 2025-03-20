@@ -1,4 +1,4 @@
-float voltage, voltage2;
+volatile float voltage, voltage2, prevVoltage;
 int sensorValue1, sensorValue2;
 int onCycle, offDelay;
 
@@ -20,19 +20,22 @@ void loop() {
   Serial.print("  ");
   Serial.print(voltage2*10);
 
-  delay(offDelay);
-
-  if(voltage < 2.30) {
+  
+  volatile float test = voltage-prevVoltage;
+  
+  if(voltage < 2.40 || test > 0.2) {
     if(offDelay>0) {
-      offDelay=offDelay-10;
+        offDelay=offDelay-10;
     }
   }
-  else{
+  else if(voltage > 1.80 || test < 0.2){
     if(offDelay<200) {
       offDelay=offDelay+10;
     }
-    
   }
+  prevVoltage = voltage;
+  delay(offDelay);
+
   Serial.print(" Offdelay: ");
   Serial.print(offDelay);
   Serial.println();
