@@ -1,20 +1,39 @@
+float voltage, voltage2;
+int sensorValue1, sensorValue2;
+int onCycle, offDelay;
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-
+  onCycle=200;
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   
-  int sensor_value1=analogRead(A0);
-  int sensor_value2=analogRead(A1);
-  float voltage= sensor_value1*(5.000/1023.000);
-  float voltage2= sensor_value2*(5.000/1023.000);
-  
+  sensorValue1=analogRead(A0);
+  sensorValue2=analogRead(A1);
+  voltage= sensorValue1*(5.000/1023.000);
+  voltage2= sensorValue2*(5.000/1023.000);
+  delay(onCycle - offDelay);
   Serial.print(voltage);
   Serial.print("  ");
-  Serial.println(voltage2);
+  Serial.print(voltage2*10);
 
+  delay(offDelay);
 
+  if(voltage < 2.30) {
+    if(offDelay>0) {
+      offDelay=offDelay-10;
+    }
+  }
+  else{
+    if(offDelay<200) {
+      offDelay=offDelay+10;
+    }
+    
+  }
+  Serial.print(" Offdelay: ");
+  Serial.print(offDelay);
+  Serial.println();
 }
