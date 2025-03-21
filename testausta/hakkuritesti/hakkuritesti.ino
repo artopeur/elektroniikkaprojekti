@@ -6,11 +6,12 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
   onCycle=200;
+  pinMode(3,OUTPUT);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  
+  digitalWrite(3,1);
   sensorValue1=analogRead(A0);
   sensorValue2=analogRead(A1);
   voltage= sensorValue1*(5.000/1023.000);
@@ -23,18 +24,19 @@ void loop() {
   
   volatile float test = voltage-prevVoltage;
   
-  if(voltage < 2.40 || test > 0.2) {
+  if(voltage < 1.80 || test > 0.2) {
     if(offDelay>0) {
         offDelay=offDelay-10;
     }
   }
-  else if(voltage > 1.80 || test < 0.2){
+  else if(voltage > 2.30 || test < 0.2){
     if(offDelay<200) {
       offDelay=offDelay+10;
     }
   }
   prevVoltage = voltage;
   delay(offDelay);
+  digitalWrite(3,0);
 
   Serial.print(" Offdelay: ");
   Serial.print(offDelay);
