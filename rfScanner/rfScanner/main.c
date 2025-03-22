@@ -49,8 +49,8 @@ uint16_t adc_read(uint8_t channel) {
 
 float get_input_voltage() {
 	uint16_t adc_value = adc_read(0);  // Read ADC channel 0
-	float voltage = (adc_value * 2.5) / 1023.0;  // Convert ADC to voltage
-	return voltage * ((100.0 + 47.0) / 47.0);  // Scale back to input voltage
+	float voltage = (adc_value * 10) / 1023.0;  // Convert ADC to voltage
+	return voltage * 10;  // Scale back to input voltage
 }
 
 void pause_ms(uint16_t ms) {
