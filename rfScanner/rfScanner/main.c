@@ -9,6 +9,10 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+//Defines
+#define F_CPU 1000000
+
+
 //Global variables
 volatile uint16_t timer_count = 0;
 
@@ -27,7 +31,7 @@ int main(void)
 {
 	adc_init();
 	timer_init();
-	pause(25); 
+	pause_ms(25); 
     while(1)
     {
 		float val = get_input_voltage();
