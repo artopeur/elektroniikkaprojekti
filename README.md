@@ -57,6 +57,23 @@ Näyttäisi olevan melko hyvä myöskin pinnien esittämiseen. User Manuaalista 
 ArduinoISP löytyy ArduinoISP kansiosta. Löytyy myös esimerkeistä arduinon omasta valikoista File->Examples alta.
 
 
+## Ajastimet
+Ajastinten suunnittelua.
+
+## Funktiot
+
+- adc_init()<br>alustaa A/D- muuntimen
+- timer_init()<br>alustaa ajastimen 1
+- uint16_t adc_read(uint8_t channel)<br> tarkoitus lukea a/d muuntimen arvo
+- float get_input_voltage()<br>muuttaa ad-muuntimen arvon jännitearvoksi
+- void pause_ms(uint16_t ms)<br>käyttää Timer 1 pysäyttämään toiminnan joiksikin millisekunneiksi. Timer 1 todennäköisesti vaihdetaan jossain vaiheessa timer2:een, kun tarvitaan pwm signaalia varten tuo timer 1.
+
+Timer1 - TCCR1B, OCR1A, TIMSK1 registers
+: Connected to PWM signal
+
+Timer2 - TCCR2B OCR1B, TIMSK2 registers 
+: Connected for timings in the code.
+
 
 # Viikko 13
 Ohjelmointilista
