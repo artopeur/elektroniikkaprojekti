@@ -58,3 +58,26 @@ ArduinoISP löytyy ArduinoISP kansiosta. Löytyy myös esimerkeistä arduinon om
 
 
 
+# Viikko 13
+Ohjelmointilista
+- I2C määritykset, LCD I2C kirjasto? Nopeus 10kHz - 50kHz?
+    - TWI moduuli?
+    - (Pull up vastukset I2C väylälle?)
+    - TWBR
+    - Kursorin ohjaus
+    - Liittimet
+- PWM ohjaus taustavalolle (NMOS)
+- PWM ohjaus mikrokontrollerin virtalähteelle (PMOS)
+- Piirrustukset valmiiksi /?
+- Tutkittavia asioita
+    - Minimi virta testaus LCD paneelilla
+- PINNIT
+    - VDD (2.8 - 3.3 V datasheetin tietyissä kohdissa.)
+    - VSS (Ground)
+    - SCL ()
+    - SDA
+    - RST (effective low) pull up resistor.
+    - A anodi - pwm kontrolloitu jännite - (noin 2.8 - 3.3 v) Pulssitettuna vie vähemmän virtaa.
+    - K (katodi - Ground)
+
+Onhan tuossa nyt jo listaa. 
