@@ -60,12 +60,6 @@ ArduinoISP löytyy ArduinoISP kansiosta. Löytyy myös esimerkeistä arduinon om
 ## Ajastimet
 Ajastinten suunnittelua.
 
-Timer1 - TCCR1B, OCR1A, TIMSK1 registers
-: Connected to PWM signal
-
-Timer2 - TCCR2B OCR1B, TIMSK2 registers 
-: Connected for timings in the code.
-
 ## Funktiot
 
 - adc_init()<br>alustaa A/D- muuntimen
@@ -73,3 +67,34 @@ Timer2 - TCCR2B OCR1B, TIMSK2 registers
 - uint16_t adc_read(uint8_t channel)<br> tarkoitus lukea a/d muuntimen arvo
 - float get_input_voltage()<br>muuttaa ad-muuntimen arvon jännitearvoksi
 - void pause_ms(uint16_t ms)<br>käyttää Timer 1 pysäyttämään toiminnan joiksikin millisekunneiksi. Timer 1 todennäköisesti vaihdetaan jossain vaiheessa timer2:een, kun tarvitaan pwm signaalia varten tuo timer 1.
+
+Timer1 - TCCR1B, OCR1A, TIMSK1 registers
+: Connected to PWM signal
+
+Timer2 - TCCR2B OCR1B, TIMSK2 registers 
+: Connected for timings in the code.
+
+
+# Viikko 13
+Ohjelmointilista
+- I2C määritykset, LCD I2C kirjasto? Nopeus 10kHz - 50kHz?
+    - TWI moduuli?
+    - (Pull up vastukset I2C väylälle?)
+    - TWBR
+    - Kursorin ohjaus
+    - Liittimet
+- PWM ohjaus taustavalolle (NMOS)
+- PWM ohjaus mikrokontrollerin virtalähteelle (PMOS)
+- Piirrustukset valmiiksi /?
+- Tutkittavia asioita
+    - Minimi virta testaus LCD paneelilla
+- PINNIT
+    - VDD (2.8 - 3.3 V datasheetin tietyissä kohdissa.)
+    - VSS (Ground)
+    - SCL ()
+    - SDA
+    - RST (effective low) pull up resistor.
+    - A anodi - pwm kontrolloitu jännite - (noin 2.8 - 3.3 v) Pulssitettuna vie vähemmän virtaa.
+    - K (katodi - Ground)
+
+Onhan tuossa nyt jo listaa. 
