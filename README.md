@@ -66,13 +66,17 @@ Ajastinten suunnittelua.
 - timer_init()<br>alustaa ajastimen 1
 - uint16_t adc_read(uint8_t channel)<br> tarkoitus lukea a/d muuntimen arvo
 - float get_input_voltage()<br>muuttaa ad-muuntimen arvon jännitearvoksi
-- void pause_ms(uint16_t ms)<br>käyttää Timer 1 pysäyttämään toiminnan joiksikin millisekunneiksi. Timer 1 todennäköisesti vaihdetaan jossain vaiheessa timer2:een, kun tarvitaan pwm signaalia varten tuo timer 1.
+- void delay_ms(uint16_t ms)<br>käyttää Timer 3 pysäyttämään toiminnan joiksikin millisekunneiksi.
+- init_timer3()<br> Alustaa timer3:n 1ms ajoitukselle 1MHz kellolla.
 
 Timer1 - TCCR1B, OCR1A, TIMSK1 registers
 : Connected to PWM signal
 
 Timer2 - TCCR2B OCR1B, TIMSK2 registers 
-: Connected for timings in the code.
+: Connected to PWM2 signal
+
+Timer3 - TCCR3B OCR3A, TIMSK3 registers
+; Connected for delay function
 
 
 # Viikko 13
@@ -91,10 +95,16 @@ Ohjelmointilista
 - PINNIT
     - VDD (2.8 - 3.3 V datasheetin tietyissä kohdissa.)
     - VSS (Ground)
-    - SCL ()
-    - SDA
+    - SCL (Kello)
+    - SDA (Data)
     - RST (effective low) pull up resistor.
     - A anodi - pwm kontrolloitu jännite - (noin 2.8 - 3.3 v) Pulssitettuna vie vähemmän virtaa.
     - K (katodi - Ground)
 
 Onhan tuossa nyt jo listaa. 
+- Tehty delay_ms funktio, joka käyttää Timer3:sta.
+
+# Viikko 14
+ - LCD näytön ohjelmointia
+    - Voidaan käyttää Timer3:n delay funktiota ajastamaan kirjoitus.
+    - Piirilevy valmiiksi aikataulu maanantaina.
