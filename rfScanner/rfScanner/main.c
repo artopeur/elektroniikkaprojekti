@@ -12,37 +12,38 @@
 
 // Introduce h files
 #include "rf_adc.h"
+#include "rf_delay_t3.h"
 
 //Introduce functions
-void pause_ms(uint16_t);
+
 
 //Global variables
-volatile uint16_t timer_count = 0;
+
 
 ISR(TIMER1_COMPA_vect) {
-	timer_count++;
+	timer_count++;		// left for pwm1, will need timer2 for pwm2
+}
+
+ISR(TIMER3_COMPA_vect) {
+	timer_count++;  // Delay counter increment.
 }
 
 int main(void) {
 	
 	adc_init();
 	timer_init();
-	pause_ms(25);
+	delay_ms(25);
+	init_timer3(); //stops interrupts before setting timer3, enables interrupts after that.
+	
 	
     while(1)
     {
 		float val = get_input_voltage();
 		if (val == 10){
-			pause_ms(10);
+			delay_ms(10);
 		}
 		
         //TODO:: Please write your application code
     }
 	return 0;
-}
-
-void pause_ms(uint16_t ms) {
-	// Double check with ms counting.
-	timer_count = 0;
-	while (timer_count < ms);
 }
