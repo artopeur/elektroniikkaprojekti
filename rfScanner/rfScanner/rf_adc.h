@@ -9,7 +9,7 @@ volatile uint8_t duty_cycle2 = 0;
 void timer_init();
 void adc_init();
 uint16_t adc_read(uint8_t);
-float get_input_voltage();
+float get_input_voltage(uint8_t);
 
 void timer_init() {
   uint16_t top_value=49;
