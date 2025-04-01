@@ -108,3 +108,28 @@ Onhan tuossa nyt jo listaa.
  - LCD näytön ohjelmointia
     - Voidaan käyttää Timer3:n delay funktiota ajastamaan kirjoitus.
     - Piirilevy valmiiksi aikataulu maanantaina.
+
+# Viikko 15
+Lisätty koodin pätkiä.
+- PWM ohjaus
+- Impedanssi johtimelle
+- Tilattu piirilevy
+
+Piirilevy tilattu. Vastoinkäymisten takia KiCadin toimitetusta versiosta puuttuu pari kondensaattorin paikkaa, jotka paikataan näillä näkymin suoralla liitännällä komponentin jalkojen välille.
+
+Pohditaan muita vaihtoehtoja.
+
+### Ohjelmoitavaa
+
+ - LCD Näytön koodin integroimista
+ - ohjausten ja tekstin syötön tutkimista.
+ - Näytön taustavalon sammutus ja sytytys.
+ - RF mittaus tuloksen luku ja käsittely
+ - Erillis mittaus laitteelle kytkentä tapahtuu johdoilla.
+   - tämän takia tutkitaan vaihtoehtoja vieläkin, mutta toivon mukaan kytkentä toimii odotetulla tavalla.
+
+ - Fuse bittien asetukset
+ 
+
+# Viikko 16
+
