@@ -20,8 +20,10 @@
 //Global variables
 
 
-ISR(TIMER1_COMPA_vect) {
-	timer_count++;		// left for pwm1, will need timer2 for pwm2
+ISR(TIMER1_COMPA_vect)
+{
+  OCR1A = (ICR1* duty_cycle)/100;
+  OCR1B = (ICR1* duty_cycle2)/100;
 }
 
 ISR(TIMER3_COMPA_vect) {
@@ -32,17 +34,31 @@ int main(void) {
 	
 	adc_init();
 	timer_init();
-	delay_ms(25);
 	init_timer3(); //stops interrupts before setting timer3, enables interrupts after that.
-	
+	delay_ms(1);
 	
     while(1)
     {
-		float val = get_input_voltage();
-		if (val == 10){
-			delay_ms(10);
-		}
 		
+	float voltage= get_input_voltage(0);
+	float voltage2= get_input_voltage(1);
+	
+	if(voltage>2.45)
+    {
+      if(duty_cycle<100)duty_cycle+=1;
+    }
+    if(voltage<1.8)
+    {
+      if(duty_cycle>0)duty_cycle-=1;
+    }
+    if(voltage2>3.3)
+    {
+      if(duty_cycle2<100)duty_cycle2-=1;
+    }
+    if(voltage2<2.8)
+    {
+      if(duty_cycle2>0)duty_cycle2+=1;
+    }
         //TODO:: Please write your application code
     }
 	return 0;
