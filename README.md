@@ -108,3 +108,82 @@ Onhan tuossa nyt jo listaa.
  - LCD näytön ohjelmointia
     - Voidaan käyttää Timer3:n delay funktiota ajastamaan kirjoitus.
     - Piirilevy valmiiksi aikataulu maanantaina.
+
+# Viikko 15
+Lisätty koodin pätkiä.
+- PWM ohjaus
+- Impedanssi johtimelle
+- Tilattu piirilevy
+
+Piirilevy tilattu. Vastoinkäymisten takia KiCadin toimitetusta versiosta puuttuu pari kondensaattorin paikkaa, jotka paikataan näillä näkymin suoralla liitännällä komponentin jalkojen välille.
+
+Pohditaan muita vaihtoehtoja.
+
+### Ohjelmoitavaa
+
+ - LCD Näytön koodin integroimista
+ - ohjausten ja tekstin syötön tutkimista.
+ - Näytön taustavalon sammutus ja sytytys.
+ - RF mittaus tuloksen luku ja käsittely
+ - Erillis mittaus laitteelle kytkentä tapahtuu johdoilla.
+   - tämän takia tutkitaan vaihtoehtoja vieläkin, mutta toivon mukaan kytkentä toimii odotetulla tavalla.
+
+ - Fuse bittien asetukset
+ 
+
+# Viikko 16
+
+- **AVR Programming with Arduino**: Using Arduino as ISP and setting the programmer as AVRISP mkII in Microchip Studio.<br><br>
+Microchip Studio, go to "Tools" > "Device Programming", select your programmer and AVR, then set up the "Interface" and "Memories" tab for flashing.<br>
+
+- **Bootloader**: How bootloaders are written (mostly in C/Assembly) and their role in receiving feedback and programming.
+
+- **ATmega328PB Startup and Power**: Ensuring the chip starts reliably with fluctuating input power, using a supercapacitor, and controlling a PMOS buck converter.
+
+- **Manual Startup Delay**: Implementing a delay in the startup using hardware (RC circuit) or software (timers) to stabilize the voltage before the chip starts functions.
+
+- **Voltage Tolerance and Safety**: Ensuring the chip remains safe when voltage spikes (up to 5.5V) and setting the brown-out to 1.8V for proper startup.
+
+## To read fuse settings
+avrdude -c arduino -p m328pb -P COM5 -b 19200 -v
+
+## To write low fuse (lfuse)
+avrdude -c arduino -p m328pb -P COM5 -b 19200 -U lfuse:w:0xXX:m
+
+## To write high fuse (hfuse)
+avrdude -c arduino -p m328pb -P COM5 -b 19200 -U hfuse:w:0xYY:m
+
+## To write extended fuse (efuse)
+avrdude -c arduino -p m328pb -P COM5 -b 19200 -U efuse:w:0xZZ:m
+
+## To flash a hex file to the chip
+avrdude -c arduino -p m328pb -P COM5 -b 19200 -U flash:w:yourfile.hex:i
+
+## To verify a hex file after flashing
+avrdude -c arduino -p m328pb -P COM5 -b 19200 -U flash:v:yourfile.hex:i
+
+## To erase flash before flashing
+avrdude -c arduino -p m328pb -P COM5 -b 19200 -e -U flash:w:yourfile.hex:i
+
+# Fuse bits
+- **Fuse Settings**: Adjusting fuses using AVRDude, Microchip Studio, and Arduino IDE for clock and power settings (e.g., setting the clock to 1MHz, brown-out detection).
+
+- **Brown-Out Detection**: Setting the brown-out fuse and considering voltage spikes, input power range (e.g., 2V to 5.5V).
+
+
+## Brownout
+avrdude -c arduino -p m328pb -P COMx -b 19200 -U efuse:w:0xFF:m -U hfuse:w:0xD9:m
+
+Brownout and clock divide by 8, serial programming and others setup
+low 0x62 = 0b 0110 0010
+high 0x99 = 0b 1001 1001
+extended 0xfe = 1111 1110
+
+-U lfuse:w:0x62:m -U hfuse:w:0x99:m -U efuse:w:0xfe:m
+
+Clock sources CKSEL3, CKSEL2, CKSEL0
+
+Do we actually need CKSEL1?
+
+Clock not divided, burnout etc.
+-U lfuse:w:0xe2:m -U hfuse:w:0x99:m -U efuse:w:0xfe:m

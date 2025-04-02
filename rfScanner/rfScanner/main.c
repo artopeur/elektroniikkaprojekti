@@ -2,7 +2,7 @@
  * main.c
  *
  * Created: 3/22/2025 12:58:42 PM
- *  Author: artop
+ *  Author: artop, tuomast, attek
  */ 
 
 //Defines
@@ -13,6 +13,7 @@
 // Introduce h files
 #include "rf_adc.h"
 #include "rf_delay_t3.h"
+#include "rf_disp.h"
 
 //Introduce functions
 
