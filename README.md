@@ -133,3 +133,31 @@ Pohditaan muita vaihtoehtoja.
 
 # Viikko 16
 
+- **AVR Programming with Arduino**: Using Arduino as ISP and setting the programmer as AVRISP mkII in Microchip Studio.
+- **Fuse Settings**: Adjusting fuses using AVRDude, Microchip Studio, and Arduino IDE for clock and power settings (e.g., setting the clock to 1MHz, brown-out detection).
+- **Brown-Out Detection**: Setting the brown-out fuse and considering voltage spikes, input power range (e.g., 2V to 5.5V).
+- **Bootloader**: How bootloaders are written (mostly in C/Assembly) and their role in receiving feedback and programming.
+- **ATmega328PB Startup and Power**: Ensuring the chip starts reliably with fluctuating input power, using a supercapacitor, and controlling a PMOS buck converter.
+- **Manual Startup Delay**: Implementing a delay in the startup using hardware (RC circuit) or software (timers) to stabilize the voltage before the chip starts functions.
+- **Voltage Tolerance and Safety**: Ensuring the chip remains safe when voltage spikes (up to 5.5V) and setting the brown-out to 1.8V for proper startup.
+
+## To read fuse settings
+avrdude -c arduino -p m328pb -P COMx -b 19200 -v
+
+## To write low fuse (lfuse)
+avrdude -c arduino -p m328pb -P COMx -b 19200 -U lfuse:w:0xXX:m
+
+## To write high fuse (hfuse)
+avrdude -c arduino -p m328pb -P COMx -b 19200 -U hfuse:w:0xYY:m
+
+## To write extended fuse (efuse)
+avrdude -c arduino -p m328pb -P COMx -b 19200 -U efuse:w:0xZZ:m
+
+## To flash a hex file to the chip
+avrdude -c arduino -p m328pb -P COMx -b 19200 -U flash:w:yourfile.hex:i
+
+## To verify a hex file after flashing
+avrdude -c arduino -p m328pb -P COMx -b 19200 -U flash:v:yourfile.hex:i
+
+## To erase flash before flashing
+avrdude -c arduino -p m328pb -P COMx -b 19200 -e -U flash:w:yourfile.hex:i
