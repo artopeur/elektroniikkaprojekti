@@ -2,7 +2,7 @@
  * main.c
  *
  * Created: 3/22/2025 12:58:42 PM
- *  Author: artop
+ *  Author: artop, tuomast, attek
  */ 
 
 //Defines
