@@ -13,6 +13,7 @@
 // Introduce h files
 #include "rf_adc.h"
 #include "rf_delay_t3.h"
+#include "rf_disp.h"
 
 //Introduce functions
 
