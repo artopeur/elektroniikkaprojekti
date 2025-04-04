@@ -77,6 +77,13 @@ rf_meas.h
 - reset_measurement()<br>
 Tämä nollaa piikkiarvon.
 
+rf_disp.h
+- initDisp() **tekemättä**
+- setText(uint8_t row, char *chars) **tekemättä**
+- setbacklight(volatile uint8_t backlight) **tekemättä**
+
+---
+## Ajastimet
 
 Timer1 - TCCR1B, OCR1A, TIMSK1 registers
 : Connected to PWM signal
@@ -89,6 +96,7 @@ Timer3 - TCCR3B OCR3A, TIMSK3 registers
 
 
 
+# Viikkoaikataulu
 
 # Viikko 13
 Ohjelmointilista
