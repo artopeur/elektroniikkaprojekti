@@ -1,4 +1,6 @@
 // Esimerkkin� h tiedoston tekemiseen.
+#ifndef RF_ADC_H
+#define RF_ADC_H
 
 #include <xc.h>
 #include <avr/io.h>
@@ -57,3 +59,4 @@ float get_input_voltage(uint8_t pin) {
 	return voltage * 10;  // Scale back to input voltage
 }
 
+#endif

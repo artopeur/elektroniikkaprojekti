@@ -1,4 +1,7 @@
 // Include timer3 initialization
+#ifndef RF_DELAY_T3_H
+#define RF_DELAY_T3_H
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
 // global variables
@@ -20,3 +23,4 @@ void delay_ms(uint16_t ms) {
 	uint16_t start = timer_count;
 	while ((timer_count - start) < ms); // wait for the specified time.
 }
+#endif
