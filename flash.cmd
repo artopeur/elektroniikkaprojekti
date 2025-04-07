@@ -12,7 +12,7 @@ goto EOF
 
 :skip
 echo using default debug folder
-echo .\avrdude\avrdude.exe -c arduino -p m328pb -P COM5 -b 19200 -U flash:w:.\rfScanner\rfScanner\Debug\rfScanner.hex:i
+echo .\avrdude\avrdude.exe -c arduino -p m328pb -P COM5 -b 19200 -e -U flash:w:.\rfScanner\rfScanner\Debug\rfScanner.hex:i
 goto EOF
 :error
 echo "no comport set."
