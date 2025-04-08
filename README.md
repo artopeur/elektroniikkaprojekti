@@ -61,23 +61,42 @@ ArduinoISP löytyy ArduinoISP kansiosta. Löytyy myös esimerkeistä arduinon om
 Ajastinten suunnittelua.
 
 ## Funktiot
-
+rf_adc.h
 - adc_init()<br>alustaa A/D- muuntimen
-- timer_init()<br>alustaa ajastimen 1
+- timer_init()<br>alustaa ajastimen 1 **päivitettävä**
 - uint16_t adc_read(uint8_t channel)<br> tarkoitus lukea a/d muuntimen arvo
 - float get_input_voltage()<br>muuttaa ad-muuntimen arvon jännitearvoksi
-- void delay_ms(uint16_t ms)<br>käyttää Timer 3 pysäyttämään toiminnan joiksikin millisekunneiksi.
-- init_timer3()<br> Alustaa timer3:n 1ms ajoitukselle 1MHz kellolla.
+
+rf_delay_t3
+- void delay_ms(uint16_t ms)<br>käyttää Timer 3 pysäyttämään toiminnan joiksikin millisekunneiksi. **päivitettävä**
+- init_timer3()<br> Alustaa timer3:n 1ms ajoitukselle 1MHz kellolla. **päivitettävä**
+
+rf_meas.h
+- measurement(uint16_t, float) <br>
+ Vertaa adc_read funktion arvoa jännitereferenssiin.
+- reset_measurement()<br>
+Tämä nollaa piikkiarvon.
+
+rf_disp.h
+- initDisp() **tekemättä**
+- setText(uint8_t row, char *chars) **tekemättä**
+- setbacklight(volatile uint8_t backlight) **tekemättä**
+
+---
+## Ajastimet
 
 Timer1 - TCCR1B, OCR1A, TIMSK1 registers
 : Connected to PWM signal
 
 Timer2 - TCCR2B OCR1B, TIMSK2 registers 
-: Connected to PWM2 signal
+: Connected to PWM2 signal : **ei käytössä** 
 
 Timer3 - TCCR3B OCR3A, TIMSK3 registers
 ; Connected for delay function
 
+
+
+# Viikkoaikataulu
 
 # Viikko 13
 Ohjelmointilista
