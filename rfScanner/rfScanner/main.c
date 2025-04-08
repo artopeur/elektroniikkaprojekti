@@ -49,19 +49,19 @@ int main(void) {
 		float voltage2= get_input_voltage(1);
 		uint16_t rfvalue = adc_read(2);
 	
-		if(voltage>2.45)
+		if(voltage>2.1)
 		{
 		  if(duty_cycle<100)duty_cycle+=1;
 		}
-		if(voltage<1.8)
+		if(voltage<2.1)
 		{
 		  if(duty_cycle>0)duty_cycle-=1;
 		}
-		if(voltage2>3.3)
+		if(voltage2>3.2)
 		{
 		  if(duty_cycle2<100)duty_cycle2-=1;
 		}
-		if(voltage2<2.8)
+		if(voltage2<3.2)
 		{
 		  if(duty_cycle2>0)duty_cycle2+=1;
 		}
