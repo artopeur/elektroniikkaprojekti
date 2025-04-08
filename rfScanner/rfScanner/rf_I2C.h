@@ -14,7 +14,7 @@
 void initI2C();
 void start_transmission();
 void stop_transmission();
-void write_data(char[]);
+void write_data(unsigned char*, size_t);
 uint8_t write_i2c(uint8_t);
 //void read_data(
 
@@ -42,38 +42,40 @@ uint8_t write_i2c(uint8_t);
 void initI2C() {
 	
 	// 0xB9 TWSR0 7:0 TWS7 TWS6 TWS5 TWS4 TWS3 [ ] TWPS[1:0]
-	TWSR0 = (1 << TWPS1) | (1<< TWPS0);						// Prescaler values, 11 = 64, 10 = 16, 01 = 4, 00 = 1
+	TWSR0 = (1 << TWPS1) | (1<< TWPS0);		// Prescaler values, 11 = 64, 10 = 16, 01 = 4, 00 = 1
 	
 	// 0xB8 TWBR0 7:0		TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn
-	TWBR0 = 120;						// SCL FREQ = CPU_CLK / (16+2(TWBR)*(prescalerValue))		Gives 130 Hz clock
+	TWBR0 = 120;							// SCL FREQ = CPU_CLK / (16+2(TWBR)*(prescalerValue))		Gives 130 Hz clock
 	
     // 0xBC TWCR0 7:0 TWINT TWEA TWSTA TWSTO TWWC TWEN [ ] TWIE
-	TWCR0 = (1 << TWINT);				// Reset lane with TWINT, set's value to 1.
+	TWCR0 = (1 << TWINT);					// Reset lane with TWINT, set's value to 1.
 	
-    
 }
+
 void start_transmission() {
     TWCR0 = (1 << TWINT) | (1<<TWSTA) | (1 << TWEN);	// Start condition
     while(!(TWCR0 & (1 <<TWINT)));						// wait for flag to set (transmission of start condition)
 }
+
 void stop_transmission() {
     TWCR0 = (1 << TWINT) | (1 << TWEN) | (1 << TWSTO);	// Stop the transmission, No need to wait for ack or nack.
 }
-void write_data(char data[]) {
+
+void write_data(unsigned char *data, size_t len) {
 	start_transmission();
 	uint8_t retries = 5;
 	uint8_t ack=0;
-	ack = write_i2c((SLAVE_ADDR << 1) | 0);			// No error handling yet. 0x18 means success. Need to read from return value. 0 means write, 1 means read.
-	
-	for(int8_t i=0;i<strlen(data);i++){				// required data length is 16 characters / row, max set to 255
-		do {										// try to send data 5 times, if nack happens, retries.
-			ack = write_i2c(data[i]);				// write byte from data array to the display.
+	ack = write_i2c((SLAVE_ADDR << 1) | 0);				// No error handling yet. 0x18 means success. Need to read from return value. 0 means write, 1 means read.
+
+	for(int8_t i=0;i<len;i++){							// required data length is 16 characters / row, max set to 255
+		do {											// try to send data 5 times, if nack happens, retries.
+			ack = write_i2c(data[i]);					// write byte from data array to the display.
 			retries--;
-		}
-		while(ack != MT_DATA_ACK && retries > 0);	// Waiting for MT_DATA_ACK, so try again if not passed through.
+		}while(ack != MT_DATA_ACK && retries > 0);		// Waiting for MT_DATA_ACK, so try again if not passed through.
 	}
-	stop_transmission();							// end the connection, send stop.
+	stop_transmission();								// end the connection, send stop.
 }
+
 uint8_t write_i2c(uint8_t data) {
     TWDR0 = data;									// set current byte as data
     TWCR0 = (1 <<TWINT) | (1<<TWEN);				// write to lane

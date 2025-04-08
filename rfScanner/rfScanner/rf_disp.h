@@ -6,10 +6,11 @@
 
 #include <avr/io.h>
 #include <xc.h>
+
 #include "rf_I2C.h"
 
 void initDisp();
-void setText(uint8_t row, char[]);
+void setText(uint8_t row, unsigned char*);
 void setbacklight(volatile uint8_t backlight);
 
 void initDisp() {
@@ -17,9 +18,9 @@ void initDisp() {
 	
 }
 
-void setText(uint8_t row, char chars[255]) {
+void setText(uint8_t row, unsigned char *chars) {
 	
-	write_data(chars);
+	write_data(chars, sizeof(chars));
 	
 }
 

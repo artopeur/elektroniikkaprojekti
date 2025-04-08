@@ -40,15 +40,8 @@ uint16_t adc_read(uint8_t pin) {
   pin &= 0x0F;
   ADMUX = (ADMUX & 0xF0) | pin;
   ADMUX |= (1 << REFS1) | (1 << REFS0); 
-
   ADCSRA |= (1 << ADSC);  
-
-
-  while (ADCSRA & (1 << ADSC)) {
-    
-  }
-
-  
+  while (ADCSRA & (1 << ADSC));
   return ADC;  
 	
 }

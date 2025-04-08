@@ -6,7 +6,7 @@
  */ 
 
 //Defines
-#define F_CPU 1000000UL // 1 MHz
+#define F_CPU 2000000UL // 1 MHz
 
 //includes
 
@@ -43,6 +43,8 @@ int main(void) {
 	init_timer3(); //stops interrupts before setting timer3, enables interrupts after that.
 	delay_ms(1);
 	initI2C();
+	initDisp();
+	delay_ms(2);
 	
     while(1)
     {
@@ -75,6 +77,9 @@ int main(void) {
 		}
 		else {
 			// print rfvolts to display.
+			unsigned char text[16] = "test text";
+			
+			setText(1, text);
 			rf_meas_counter++;
 		}		
 		if(rf_meas_counter > 200) {
