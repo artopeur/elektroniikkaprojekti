@@ -15,6 +15,7 @@
 #include "rf_delay_t3.h"
 #include "rf_disp.h"
 #include "rf_meas.h"
+#include "rf_I2C.h"
 
 //Introduce functions
 
@@ -41,6 +42,7 @@ int main(void) {
 	timer_init();
 	init_timer3(); //stops interrupts before setting timer3, enables interrupts after that.
 	delay_ms(1);
+	initI2C();
 	
     while(1)
     {
