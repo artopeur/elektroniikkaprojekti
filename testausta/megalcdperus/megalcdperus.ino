@@ -29,10 +29,10 @@ int ASCL = A5;
 
 int test = 55;
 
-unsigned char text1[]={"Newhaven Display"};
-unsigned char text2[]={"  NHD-C0220BiZ  "};
-unsigned char text3[]={" I2C Interface  "};
-unsigned char text4[]={"Please enjoy! :)"};
+unsigned char text1[]={"Hello World to you!!"};
+unsigned char text2[]={"  NHD-C0220BiZ      "};
+unsigned char text3[]={" I2C Interface      "};
+unsigned char text4[]={"Please enjoy! :)    "};
 
 const char slave2w = 0x3C; 
 const char comsend = 0x00;
@@ -45,7 +45,7 @@ void show(unsigned char *text)
   d=0x00;
   Wire.beginTransmission(slave2w);
   Wire.write(datasend);
-  for(n=0;n<16;n++)
+  for(n=0;n<20;n++)
   {
     Wire.write(*text);
     ++text;
