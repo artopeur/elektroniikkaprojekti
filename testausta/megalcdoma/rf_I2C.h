@@ -51,12 +51,12 @@ void initI2C() {
 	// 0xB9 TWSR0 7:0 TWS7 TWS6 TWS5 TWS4 TWS3 [ ] TWPS[1:0]
 	//TWSR0 = (1 << TWPS1) | (1<< TWPS0);		// Prescaler values, 11 = 64, 10 = 16, 01 = 4, 00 = 1
   // arduino
-  TWSR = (1 << TWPS1) | (1<<TWPS0); // prescalers
+  TWSR = (1 << TWPS1) | (0<<TWPS0); // prescalers
 	
 	// 0xB8 TWBR0 7:0		TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn
 	//TWBR0 = 120;							// SCL FREQ = CPU_CLK / (16+2(TWBR)*(prescalerValue))		Gives 130 Hz clock
 	//arduino
-  TWBR = 120;
+  TWBR = 180;
     // 0xBC TWCR0 7:0 TWINT TWEA TWSTA TWSTO TWWC TWEN [ ] TWIE
 	//TWCR0 = (1 << TWINT);					// Reset lane with TWINT, set's value to 1.
 	// arduino
@@ -72,7 +72,7 @@ void stop_transmission() {
     TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTO);	// Stop the transmission, No need to wait for ack or nack.
 }
 
-void write_data(unsigned char *data, size_t len) {
+void write_data(unsigned char *data, size_t len, uint8_t row) {
 
 	// required data length is 20 characters / row, max set to 255
   uint8_t retries = 5;
@@ -83,9 +83,22 @@ void write_data(unsigned char *data, size_t len) {
   ack = write_command(0x01);
   stop_transmission();
   delay(10);
-  
-
-
+  //*
+  start_transmission();
+  if(row == 1) {
+    ack = write_command((SLAVE_ADDR));
+    ack = write_command(0x80);
+    ack = write_command(0x00);
+    
+  }
+  else {
+    ack = write_command((SLAVE_ADDR));
+    ack = write_command(0x80);
+    ack = write_command(0xA8);
+  }
+  stop_transmission();
+  delay(10);
+  //*/
   //ack = write_command(0x08);
   Serial.print("The size of data is: ");
   Serial.println(len);
@@ -94,7 +107,9 @@ void write_data(unsigned char *data, size_t len) {
   start_transmission();                 // start connection
   ack = write_command((SLAVE_ADDR));
   Serial.println(ack);
+
   ack = write_command(0x40);
+  
   Serial.print("Send data, response is: ");
   Serial.println(ack);
   for(int8_t i=0;i<20;i++){

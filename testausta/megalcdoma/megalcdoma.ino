@@ -15,8 +15,11 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   unsigned char text1[20] = "taxi in the hub!";
+  unsigned char text2[20] = "another taxi?";
   Serial.println("Beginning print to display.");
   setText(2,text1);
   Serial.println("setText is done.");
-  delay(600);
+  delay(3000);
+  setText(1, text2);
+  delay(3000);
 }

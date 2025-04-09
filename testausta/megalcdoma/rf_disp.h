@@ -50,7 +50,7 @@ void initDisp() {
 void setText(uint8_t row, unsigned char *chars) {
   uint16_t response;
   //response = write_command(0);
-  write_data(chars, sizeof(chars));
+  write_data(chars, sizeof(chars), row);
 	
 }
 
