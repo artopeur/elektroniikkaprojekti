@@ -21,7 +21,8 @@ void loop() {
   float_to_char(v2,buffer,5, 2);
 
   float vin = 3.8;
-  float_to_char(v2,buffer,5,2);
+  float_to_char(vin,buffer,5,2);
+
 
   unsigned char text1[20] = {"V1=v1,V2=v2,IN=V2"};
   unsigned char text2[20] = "run home dude..";
@@ -36,5 +37,13 @@ void loop() {
   Serial.println("setText is done.");
   delay(3000);
   setText(2,buffer);
+  delay(3000);
+  int percent = 98;
+  for (uint8_t i=0;i<20;i++)  {   // clearing buffer. Might need to move to rf_disp.h to make a function for this.
+    buffer[i] = ' ';
+  }
+  
+  int_to_char(percent, buffer,3);
+  setText(1, buffer);
   delay(3000);
 }

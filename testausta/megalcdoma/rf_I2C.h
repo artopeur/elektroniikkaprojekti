@@ -81,9 +81,6 @@ void write_data(unsigned char *data, size_t len, uint8_t row) {
 
   set_row(row);
   //ack = write_command(0x08);
-  Serial.print("The size of data is: ");
-  Serial.println(len);
-  Serial.println("beginning write.");
   start_transmission();                 // start connection
   ack = write_command((SLAVE_ADDR));
   Serial.println(ack);
