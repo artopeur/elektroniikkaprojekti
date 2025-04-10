@@ -108,6 +108,7 @@ unsigned char write_i2c(unsigned char *data) {
 }
 
 void clear_screen(void) {
+  unsigned char ack=0;
 	///*
   start_transmission();
   ack = write_command((SLAVE_ADDR));    // clear screen
@@ -119,21 +120,23 @@ void clear_screen(void) {
 }
 
 void set_row(uint8_t row) {
-    //*
-    start_transmission();
-    if(row == 1) {
-      ack = write_command((SLAVE_ADDR)); // change address.
-      ack = write_command(0x00);
-      ack = write_command(0x80);
-      
-    }
-    else {
-      ack = write_command((SLAVE_ADDR)); // change address
-      ack = write_command(0x00);
-      ack = write_command(0xC0);
-    }
-    stop_transmission();
-    delay(10);
-    //*/
+  unsigned char ack=0;
+  //*
+
+  start_transmission();
+  if(row == 1) {
+    ack = write_command((SLAVE_ADDR)); // change address.
+    ack = write_command(0x00);
+    ack = write_command(0x80);
+
+  }
+  else {
+    ack = write_command((SLAVE_ADDR)); // change address
+    ack = write_command(0x00);
+    ack = write_command(0xC0);
+  }
+  stop_transmission();
+  delay(10);
+  //*/
 }
 #endif
