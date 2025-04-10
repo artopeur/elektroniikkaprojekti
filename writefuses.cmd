@@ -27,4 +27,4 @@ goto :EOF
 
 echo Error Occurred. 
 echo Check inputs. 
-echo writefuses needs inputs (highfuse lowfuse extrafuse comport) in that order. Divide by space not commas.
+echo writefuses needs inputs (lowfuse highfuse extrafuse comport) in that order. Divide by space not commas.

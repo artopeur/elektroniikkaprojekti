@@ -6,7 +6,7 @@
  */ 
 
 //Defines
-#define F_CPU 1000000UL // 1 MHz
+#define F_CPU 2000000UL // 1 MHz
 
 //includes
 
@@ -15,6 +15,7 @@
 #include "rf_delay_t3.h"
 #include "rf_disp.h"
 #include "rf_meas.h"
+#include "rf_I2C.h"
 
 //Introduce functions
 
@@ -41,6 +42,9 @@ int main(void) {
 	timer_init();
 	init_timer3(); //stops interrupts before setting timer3, enables interrupts after that.
 	delay_ms(1);
+	initI2C();
+	initDisp();
+	delay_ms(2);
 	
     while(1)
     {
@@ -49,19 +53,19 @@ int main(void) {
 		float voltage2= get_input_voltage(1);
 		uint16_t rfvalue = adc_read(2);
 	
-		if(voltage>2.45)
+		if(voltage>2.1)
 		{
 		  if(duty_cycle<100)duty_cycle+=1;
 		}
-		if(voltage<1.8)
+		if(voltage<2.1)
 		{
 		  if(duty_cycle>0)duty_cycle-=1;
 		}
-		if(voltage2>3.3)
+		if(voltage2>3.2)
 		{
 		  if(duty_cycle2<100)duty_cycle2-=1;
 		}
-		if(voltage2<2.8)
+		if(voltage2<3.2)
 		{
 		  if(duty_cycle2>0)duty_cycle2+=1;
 		}
@@ -73,6 +77,9 @@ int main(void) {
 		}
 		else {
 			// print rfvolts to display.
+			unsigned char text[16] = "test text";
+			
+			setText(1, text);
 			rf_meas_counter++;
 		}		
 		if(rf_meas_counter > 200) {
