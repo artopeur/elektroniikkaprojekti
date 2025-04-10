@@ -56,7 +56,7 @@ void initI2C() {
 	// 0xB8 TWBR0 7:0		TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn
 	//TWBR0 = 120;							// SCL FREQ = CPU_CLK / (16+2(TWBR)*(prescalerValue))		Gives 130 Hz clock
 	//arduino
-  TWBR = 180;
+  TWBR = 180;                 // 518 hz prescaler 16
     // 0xBC TWCR0 7:0 TWINT TWEA TWSTA TWSTO TWWC TWEN [ ] TWIE
 	//TWCR0 = (1 << TWINT);					// Reset lane with TWINT, set's value to 1.
 	// arduino
@@ -78,21 +78,21 @@ void write_data(unsigned char *data, size_t len, uint8_t row) {
   uint8_t retries = 5;
   unsigned char ack=0;
 	start_transmission();
-  ack = write_command((SLAVE_ADDR));
-  ack = write_command(0x00);
+  ack = write_command((SLAVE_ADDR));    // clear screen
+  ack = write_command(0x80);
   ack = write_command(0x01);
   stop_transmission();
   delay(10);
   //*
   start_transmission();
   if(row == 1) {
-    ack = write_command((SLAVE_ADDR));
+    ack = write_command((SLAVE_ADDR)); // change address.
     ack = write_command(0x80);
-    ack = write_command(0x00);
+    ack = write_command(0x01);
     
   }
   else {
-    ack = write_command((SLAVE_ADDR));
+    ack = write_command((SLAVE_ADDR)); // change address
     ack = write_command(0x80);
     ack = write_command(0xA8);
   }

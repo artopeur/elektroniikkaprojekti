@@ -17,31 +17,31 @@ void setbacklight(volatile uint8_t backlight);
 
 void initDisp() {
   uint16_t response;
-  Serial.println("response made");
+  //Serial.println("response made");
 	initI2C();
-  Serial.println("I2C initialized.");
+  //Serial.println("I2C initialized.");
   start_transmission();
-  Serial.println("Start transmission sent.");
+  //Serial.println("Start transmission sent.");
   response = write_command(SLAVE_ADDR);
-  Serial.print("Slave Addr sent: Response is: ");
-  Serial.println(response);
+  //Serial.print("Slave Addr sent: Response is: ");
+  //Serial.println(response);
   response = write_command(0x38);
-  Serial.print("0x38 sent: Response is: ");
-  Serial.println(response);
+  //Serial.print("0x38 sent: Response is: ");
+  //Serial.println(response);
   delay(10);
   response=write_command(0x39);
-  Serial.print("0x39 sent: Response is: ");
-  Serial.println(response);
+  //Serial.print("0x39 sent: Response is: ");
+  //Serial.println(response);
   delay(10);
   char data[7] = {0x14,0x78,0x5E, 0x6D, 0x0C, 0x01, 0x06};
-  Serial.print("data variable made, data is: ");
-  Serial.println(data);
+  //Serial.print("data variable made, data is: ");
+  //Serial.println(data);
   for(uint8_t n = 0; n<7;n++) {
     response = write_command(data[n]);
-    Serial.print("data is: ");
-    Serial.print(data[n]);
-    Serial.print(" and response is: ");
-    Serial.println(response);
+    //Serial.print("data is: ");
+    //Serial.print(data[n]);
+    //Serial.print(" and response is: ");
+    //Serial.println(response);
   }
   delay(10);
 	stop_transmission();

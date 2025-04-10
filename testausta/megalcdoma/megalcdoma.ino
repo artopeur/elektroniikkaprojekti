@@ -6,7 +6,7 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(19200);
   //initDisp();
-  Serial.println("test");
+  //Serial.println("test");
   initDisp();
   Serial.println("init done.");
   delay(10);
@@ -20,6 +20,8 @@ void loop() {
   setText(2,text1);
   Serial.println("setText is done.");
   delay(3000);
+  Serial.println("Beginning print to display.");
   setText(1, text2);
+  Serial.println("setText is done.");
   delay(3000);
 }
