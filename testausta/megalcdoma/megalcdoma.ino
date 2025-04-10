@@ -14,17 +14,27 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  unsigned char buffer[20];
   float v1 = 1.8;
+  float_to_char(v1, buffer, 20, 2);
   float v2 = 3.3;
+  float_to_char(v2,buffer,20, 2);
+
   float vin = 3.8;
+  float_to_char(v2,buffer,20,2);
+
   unsigned char text1[20] = {"V1=v1,V2=v2,IN=V2"};
   unsigned char text2[20] = "run home dude..";
   Serial.println("Beginning print to display.");
+  clear_screen();
   setText(2,text1);
   Serial.println("setText is done.");
   delay(3000);
   Serial.println("Beginning print to display.");
+  clear_screen();
   setText(1, text2);
   Serial.println("setText is done.");
+  delay(3000);
+  setText(2,buffer);
   delay(3000);
 }
