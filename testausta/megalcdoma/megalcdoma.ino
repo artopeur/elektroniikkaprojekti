@@ -14,8 +14,11 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  unsigned char text1[20] = "taxi in the hub!";
-  unsigned char text2[20] = "another taxi?";
+  float v1 = 1.8;
+  float v2 = 3.3;
+  float vin = 3.8;
+  unsigned char text1[20] = {"V1=v1,V2=v2,IN=V2"};
+  unsigned char text2[20] = "run home dude..";
   Serial.println("Beginning print to display.");
   setText(2,text1);
   Serial.println("setText is done.");

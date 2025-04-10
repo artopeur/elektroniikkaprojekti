@@ -77,12 +77,14 @@ void write_data(unsigned char *data, size_t len, uint8_t row) {
 	// required data length is 20 characters / row, max set to 255
   uint8_t retries = 5;
   unsigned char ack=0;
-	start_transmission();
+	/*
+  start_transmission();
   ack = write_command((SLAVE_ADDR));    // clear screen
   ack = write_command(0x80);
   ack = write_command(0x01);
   stop_transmission();
   delay(10);
+  //*/
   //*
   start_transmission();
   if(row == 1) {
