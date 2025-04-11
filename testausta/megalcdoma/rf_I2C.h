@@ -23,8 +23,9 @@ void stop_transmission();
 void write_data(unsigned char*, size_t);
 unsigned char write_i2c(unsigned char*);
 unsigned char write_command(unsigned char*);
-void clear_screen(void);
-void set_row(uint8_t);
+void clearScreen(void);
+void setRow(uint8_t);
+void setRowPlace(uint8_t, uint8_t);
 //void read_data(
 
 // Define slave address
@@ -79,7 +80,7 @@ void write_data(unsigned char *data, size_t len, uint8_t row) {
 	// required data length is 20 characters / row, max set to 255
   unsigned char ack=0;
 
-  set_row(row);
+  
   //ack = write_command(0x08);
   start_transmission();                 // start connection
   ack = write_command((SLAVE_ADDR));
@@ -104,7 +105,7 @@ unsigned char write_i2c(unsigned char *data) {
 	return (TWSR & 0xF8);							// Return top 5 bits of TWSR0, where the status is kept. (Gives the start, sla, data ack and nack codes.)
 }
 
-void clear_screen(void) {
+void clearScreen(void) {
   unsigned char ack=0;
 	///*
   start_transmission();
@@ -116,7 +117,7 @@ void clear_screen(void) {
   //*/
 }
 
-void set_row(uint8_t row) {
+void setRow(uint8_t row) {
   unsigned char ack=0;
   //*
 
@@ -134,6 +135,29 @@ void set_row(uint8_t row) {
   }
   stop_transmission();
   delay(10);
+  //*/
+}
+void setRowPlace(uint8_t row, uint8_t step) {
+  unsigned char ack = 0;
+  //*
+  start_transmission();
+  if(row  == 1) {
+    if(step < 20) {
+      step=step+0x80;
+      ack = write_command((SLAVE_ADDR));
+      ack = write_command(0x00);
+      ack = write_command(step);
+    }
+  }
+  else {
+    if(step < 20) {
+      step=step+0xc0;
+      ack = write_command((SLAVE_ADDR));
+      ack = write_command(0x00);
+      ack = write_command(step);
+    }
+  }
+  
   //*/
 }
 #endif

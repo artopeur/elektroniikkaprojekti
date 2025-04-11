@@ -14,7 +14,10 @@
 void initDisp();
 void setText(uint8_t row, unsigned char*);
 void setbacklight(volatile uint8_t backlight);
-void int_to_char(int num, unsigned char* buffer, int buffer_size);
+void floatToChar(float num, unsigned char* buffer, int buffer_size, int precision);
+void intToChar(int num, unsigned char* buffer, int buffer_size);
+void setRowStep(uint8_t row, uint8_t step);
+void clearBuffer(uint8_t size, unsigned char*);
 
 void initDisp() {
   uint16_t response;
@@ -36,6 +39,7 @@ void initDisp() {
 void setText(uint8_t row, unsigned char *chars) {
   uint16_t response;
   //response = write_command(0);
+  //setRow(row);
   write_data(chars, sizeof(chars), row);
 	
 }
@@ -44,7 +48,7 @@ void setbacklight(volatile uint8_t backlight) {
 	
 }
 
-void int_to_char(int num, unsigned char* buffer, int buffer_size) {
+void intToChar(int num, unsigned char* buffer, int buffer_size) {
   // Handle negative numbers
   int is_negative = 0;
   if (num < 0) {
@@ -102,7 +106,7 @@ void int_to_char(int num, unsigned char* buffer, int buffer_size) {
       buffer[0] = '-';
   }
 }
-void float_to_char(float num, unsigned char* buffer, int buffer_size, int precision) {
+void floatToChar(float num, unsigned char* buffer, int buffer_size, int precision) {
   // Handle negative numbers
   int is_negative = 0;
   if (num < 0) {
@@ -208,6 +212,11 @@ void float_to_char(float num, unsigned char* buffer, int buffer_size, int precis
       for (int i = 0; i <= total_size - idx - 2; i++) {
           buffer[i] = buffer[idx + i];
       }
+  }
+}
+void clearBuffer(uint8_t size, unsigned char* buffer) {
+    for (uint8_t i=0;i<size;i++)  {   // clearing buffer. Might need to move to rf_disp.h to make a function for this.
+    buffer[i] = ' ';
   }
 }
 #endif
