@@ -23,6 +23,9 @@ void stop_transmission();
 void write_data(unsigned char*, size_t);
 unsigned char write_i2c(unsigned char*);
 unsigned char write_command(unsigned char*);
+void clearScreen(void);
+void setRow(uint8_t);
+void setRowPlace(uint8_t, uint8_t);
 //void read_data(
 
 // Define slave address
@@ -47,7 +50,6 @@ unsigned char write_command(unsigned char*);
 #define END_RECEIVE_ACK 58
 
 void initI2C() {
-	
 	// 0xB9 TWSR0 7:0 TWS7 TWS6 TWS5 TWS4 TWS3 [ ] TWPS[1:0]
 	//TWSR0 = (1 << TWPS1) | (1<< TWPS0);		// Prescaler values, 11 = 64, 10 = 16, 01 = 4, 00 = 1
   // arduino
@@ -57,7 +59,8 @@ void initI2C() {
 	//TWBR0 = 120;							// SCL FREQ = CPU_CLK / (16+2(TWBR)*(prescalerValue))		Gives 130 Hz clock
 	//arduino
   TWBR = 180;                 // 518 hz prescaler 16
-    // 0xBC TWCR0 7:0 TWINT TWEA TWSTA TWSTO TWWC TWEN [ ] TWIE
+  
+  // 0xBC TWCR0 7:0 TWINT TWEA TWSTA TWSTO TWWC TWEN [ ] TWIE
 	//TWCR0 = (1 << TWINT);					// Reset lane with TWINT, set's value to 1.
 	// arduino
   TWCR = (1 << TWINT);
@@ -75,43 +78,14 @@ void stop_transmission() {
 void write_data(unsigned char *data, size_t len, uint8_t row) {
 
 	// required data length is 20 characters / row, max set to 255
-  uint8_t retries = 5;
   unsigned char ack=0;
-	start_transmission();
-  ack = write_command((SLAVE_ADDR));    // clear screen
-  ack = write_command(0x80);
-  ack = write_command(0x01);
-  stop_transmission();
-  delay(10);
-  //*
-  start_transmission();
-  if(row == 1) {
-    ack = write_command((SLAVE_ADDR)); // change address.
-    ack = write_command(0x80);
-    ack = write_command(0x01);
-    
-  }
-  else {
-    ack = write_command((SLAVE_ADDR)); // change address
-    ack = write_command(0x80);
-    ack = write_command(0xA8);
-  }
-  stop_transmission();
-  delay(10);
-  //*/
-  //ack = write_command(0x08);
-  Serial.print("The size of data is: ");
-  Serial.println(len);
-  Serial.println("beginning write.");
 
+  
+  //ack = write_command(0x08);
   start_transmission();                 // start connection
   ack = write_command((SLAVE_ADDR));
   Serial.println(ack);
-
   ack = write_command(0x40);
-  
-  Serial.print("Send data, response is: ");
-  Serial.println(ack);
   for(int8_t i=0;i<20;i++){
     ack = write_command(data[i]);					// write byte from data array to the display.
   }	
@@ -131,4 +105,59 @@ unsigned char write_i2c(unsigned char *data) {
 	return (TWSR & 0xF8);							// Return top 5 bits of TWSR0, where the status is kept. (Gives the start, sla, data ack and nack codes.)
 }
 
+void clearScreen(void) {
+  unsigned char ack=0;
+	///*
+  start_transmission();
+  ack = write_command((SLAVE_ADDR));    // clear screen
+  ack = write_command(0x80);
+  ack = write_command(0x01);
+  stop_transmission();
+  delay(10);
+  //*/
+}
+
+void setRow(uint8_t row) {
+  unsigned char ack=0;
+  //*
+
+  start_transmission();
+  if(row == 1) {
+    ack = write_command((SLAVE_ADDR)); // change address.
+    ack = write_command(0x00);
+    ack = write_command(0x80);
+
+  }
+  else {
+    ack = write_command((SLAVE_ADDR)); // change address
+    ack = write_command(0x00);
+    ack = write_command(0xC0);
+  }
+  stop_transmission();
+  delay(10);
+  //*/
+}
+void setRowPlace(uint8_t row, uint8_t step) {
+  unsigned char ack = 0;
+  //*
+  start_transmission();
+  if(row  == 1) {
+    if(step < 20) {
+      step=step+0x80;
+      ack = write_command((SLAVE_ADDR));
+      ack = write_command(0x00);
+      ack = write_command(step);
+    }
+  }
+  else {
+    if(step < 20) {
+      step=step+0xc0;
+      ack = write_command((SLAVE_ADDR));
+      ack = write_command(0x00);
+      ack = write_command(step);
+    }
+  }
+  
+  //*/
+}
 #endif
