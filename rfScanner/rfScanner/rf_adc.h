@@ -2,9 +2,11 @@
 #ifndef RF_ADC_H
 #define RF_ADC_H
 
-#include <xc.h>
-#include <avr/io.h>
-#include <avr/interrupt.h>
+#ifndef ARDUINO
+  #include <xc.h>
+  #include <avr/io.h>
+  #include <avr/interrupt.h>
+#endif
 volatile uint8_t duty_cycle = 0;
 volatile uint8_t duty_cycle2 = 0;
 // Introduce all functions

@@ -6,6 +6,9 @@
 #ifdef ARDUINO
   #include "/GIT/elektroniikkaprojekti/rfScanner/rfScanner/rf_I2C.h"
   #include "/GIT/elektroniikkaprojekti/rfScanner/rfScanner/rf_disp.h"
+  #include "/GIT/elektroniikkaprojekti/rfScanner/rfScanner/rf_adc.h"
+  #include "/GIT/elektroniikkaprojekti/rfScanner/rfScanner/rf_delay_t3.h"
+  #include "/GIT/elektroniikkaprojekti/rfScanner/rfScanner/rf_meas.h"
 #endif
 #ifndef ARDUINO
   #include "rf_I2C.h"

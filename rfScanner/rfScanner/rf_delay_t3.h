@@ -2,16 +2,20 @@
 #ifndef RF_DELAY_T3_H
 #define RF_DELAY_T3_H
 
-#include <avr/io.h>
-#include <avr/interrupt.h>
-// global variables
+#ifndef ARDUINO
+
+	#include <avr/io.h>
+	#include <avr/interrupt.h>
+
+#endif
+	// global variables
 volatile uint16_t timer_count = 0;	// maximum of 65 536 ms
 
 void init_timer3(void);
 void delay_ms(uint16_t);
 
 void init_timer3(void) {
-	cli(); // disable interrupts globally
+	cli(); 						// disable interrupts globally
 	TCCR3B |= (1 << WGM32);		// Timer3 WGM32 enabled. Leave other bits intact.
 	OCR3A = 124;				//  1 000 000 / 8 = 125 000 -> 125 000 / 1000 us = 125 ticks / ms -> 125 -1 = 124 ticks.
 	TCCR3B |= (1 << CS31);		// prescaler set to 8  || leave other bits intact, just set CS31
