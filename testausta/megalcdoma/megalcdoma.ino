@@ -13,22 +13,36 @@ void setup() {
 }
 
 void loop() {
-  unsigned char buffer[20] = "Display Running";
+  unsigned char buffer[20] = "data:";
   unsigned char measure[20] = "";
   volatile float data = 0.1;
+  volatile float rfdata = 0.11;
   clearScreen();
-  setText(1,buffer);
+  //setText(1,buffer);
   for (uint8_t i = 0; i<50;i++) {
     if(i < 25) {
       data = data + 0.1;
+      rfdata = rfdata+0.11;
     }
     else {
       data=data - 0.1;
+      rfdata=rfdata-0.11;
     }
-    clearBuffer(20,measure);
+    clearBuffer(strlenCustom(measure),measure);
+    unsigned char result [20] = "";
+    
+    
     floatToChar(data,measure,5,2);
-    setRowPlace(1,16);
-    setText(2,measure);
+    combine(buffer, measure, result);
+    clearBuffer(strlenCustom(measure),measure);
+    floatToChar(rfdata, measure,5,2);
+    combine(result, " rf:", result);
+    combine(result,measure,result);
+    setRowPlace(1,0);
+    setText(1,result);
+    clearBuffer(strlenCustom(buffer),buffer);
+    SplitResult bf2=split(buffer,0);
+    combine(bf2.part1,"DATA:", buffer);
     delay(500);
   }
   // put your main code here, to run repeatedly:

@@ -267,7 +267,7 @@ int strlenCustom(char* z) {
     return length;
 }
 
-SplitResult split(char*s, int number) {
+SplitResult split(char* s, int number) {
     SplitResult result;
 
 
