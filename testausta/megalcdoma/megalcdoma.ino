@@ -1,7 +1,5 @@
 #include<Arduino.h>
 
-
-
 #define ARDUINO 1
 #ifdef ARDUINO
   #include "/GIT/elektroniikkaprojekti/rfScanner/rfScanner/rf_I2C.h"
