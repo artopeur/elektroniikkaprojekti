@@ -27,7 +27,7 @@ void loop() {
     }
     clearBuffer(20,measure);
     floatToChar(data,measure,5,2);
-    setRowPlace(2,1);
+    setRowPlace(1,16);
     setText(2,measure);
     delay(500);
   }
