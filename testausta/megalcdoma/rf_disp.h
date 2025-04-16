@@ -10,6 +10,10 @@
 
 #define SLAVE_ADDR 0x78
 
+typedef struct {
+    char part1[20];
+    char part2[20];
+} SplitResult;
 
 void initDisp();
 void setText(uint8_t row, unsigned char*);
@@ -18,6 +22,9 @@ void floatToChar(float num, unsigned char* buffer, int buffer_size, int precisio
 void intToChar(int num, unsigned char* buffer, int buffer_size);
 void setRowStep(uint8_t row, uint8_t step);
 void clearBuffer(uint8_t size, unsigned char*);
+char* combine(char*, char*, char*);
+int strlenCustom(char*);
+SplitResult split(char* s, int number);
 
 void initDisp() {
   uint16_t response;
@@ -218,5 +225,80 @@ void clearBuffer(uint8_t size, unsigned char* buffer) {
     for (uint8_t i=0;i<size;i++)  {   // clearing buffer. Might need to move to rf_disp.h to make a function for this.
     buffer[i] = ' ';
   }
+}
+
+
+char* combine(char* x, char* y, char* combined)
+{
+    int length_x = strlenCustom(x);
+    int length_y = strlenCustom(y);
+
+    int total = length_x+length_y ;
+
+    if (total >= 20) {
+        total=20;
+    }
+
+    int i = 0 ;
+
+
+    while (i < length_x&&i<total) {
+        combined[i] = x[i];
+        i++;
+    }
+    int j = 0;
+
+    while (j < length_y&&i<total) {
+        combined[i] = y[j];
+        i++;
+        j++;
+    }
+
+    combined[i] = '\0';
+
+    return combined;
+}
+
+int strlenCustom(char* z) {
+    int length = 0;
+    while (z[length] != '\0') {
+        length++;
+    }
+    return length;
+}
+
+SplitResult split(char*s, int number) {
+    SplitResult result;
+
+
+    int i = 0;
+    int length = 0;
+
+
+    while (s[length] != '\0') {
+        length++;
+    }
+
+    if (number > length) {
+        number = length;
+    }
+
+
+    while (i < number) {
+        result.part1[i] = s[i];
+        i++;
+    }
+    result.part1[i] = '\0';
+
+
+    int j = 0;
+    while (i < length) {
+        result.part2[j] = s[i];
+        i++;
+        j++;
+    }
+    result.part2[j] = '\0';
+
+    return result;
 }
 #endif

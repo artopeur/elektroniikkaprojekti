@@ -7,15 +7,25 @@
 #ifndef RF_I2C_H
 #define RF_I2C_H
 
+// Arduino includes
+/*
+#include <inttypes.h>
+#include <arduino.h>
+//*/
+///*
 #include <stdint.h>		// uint8_t etc.
 #include <avr/io.h>		// Registers for IO ports.
 #include <string.h>
-
+//*/
 void initI2C();
 void start_transmission();
 void stop_transmission();
-void write_data(unsigned char*, size_t);
-uint8_t write_i2c(uint8_t);
+void write_data(unsigned char*, size_t, uint8_t);
+unsigned char write_i2c(unsigned char*);
+unsigned char write_command(unsigned char*);
+void clearScreen(void);
+void setRow(uint8_t);
+void setRowPlace(uint8_t, uint8_t);
 //void read_data(
 
 // Define slave address
@@ -27,29 +37,33 @@ uint8_t write_i2c(uint8_t);
 
 // Sender definitions, with receiving ACK
 
-#define START 0x08
-#define MT_SLA_ACK 0x18
-#define MT_SLA_NACK 0x20
-#define MT_DATA_ACK 0x28
-#define MT_DATA_NACK 0x30
+#define START 08
+#define MT_SLA_ACK 18
+#define MT_SLA_NACK 20
+#define MT_DATA_ACK 32
+#define MT_DATA_NACK 30
 
 // Receiver definitions with writing ACK
-#define RECEIVER_READY_ACK 0x40
-#define RECEIVER_NACK 0x48
-#define RESPONSE_ACK 0x50
-#define END_RECEIVE_ACK 0x58
+#define RECEIVER_READY_ACK 40
+#define RECEIVER_NACK 48
+#define RESPONSE_ACK 50
+#define END_RECEIVE_ACK 58
 
 void initI2C() {
-	
 	// 0xB9 TWSR0 7:0 TWS7 TWS6 TWS5 TWS4 TWS3 [ ] TWPS[1:0]
 	TWSR0 = (1 << TWPS1) | (1<< TWPS0);		// Prescaler values, 11 = 64, 10 = 16, 01 = 4, 00 = 1
+  // arduino
+  //TWSR = (1 << TWPS1) | (0<<TWPS0); // prescalers
 	
 	// 0xB8 TWBR0 7:0		TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn
 	TWBR0 = 120;							// SCL FREQ = CPU_CLK / (16+2(TWBR)*(prescalerValue))		Gives 130 Hz clock
-	
-    // 0xBC TWCR0 7:0 TWINT TWEA TWSTA TWSTO TWWC TWEN [ ] TWIE
+	//arduino
+  //TWBR = 180;                 // 518 hz prescaler 16
+  
+  // 0xBC TWCR0 7:0 TWINT TWEA TWSTA TWSTO TWWC TWEN [ ] TWIE
 	TWCR0 = (1 << TWINT);					// Reset lane with TWINT, set's value to 1.
-	
+	// arduino
+  //TWCR = (1 << TWINT);
 }
 
 void start_transmission() {
@@ -61,26 +75,89 @@ void stop_transmission() {
     TWCR0 = (1 << TWINT) | (1 << TWEN) | (1 << TWSTO);	// Stop the transmission, No need to wait for ack or nack.
 }
 
-void write_data(unsigned char *data, size_t len) {
-	start_transmission();
-	uint8_t retries = 5;
-	uint8_t ack=0;
-	ack = write_i2c((SLAVE_ADDR << 1) | 0);				// No error handling yet. 0x18 means success. Need to read from return value. 0 means write, 1 means read.
+void write_data(unsigned char *data, size_t len, uint8_t row) {
 
-	for(int8_t i=0;i<len;i++){							// required data length is 16 characters / row, max set to 255
-		do {											// try to send data 5 times, if nack happens, retries.
-			ack = write_i2c(data[i]);					// write byte from data array to the display.
-			retries--;
-		}while(ack != MT_DATA_ACK && retries > 0);		// Waiting for MT_DATA_ACK, so try again if not passed through.
-	}
-	stop_transmission();								// end the connection, send stop.
+	// required data length is 20 characters / row, max set to 255
+  unsigned char ack=0;
+
+  
+  //ack = write_command(0x08);
+  start_transmission();                 // start connection
+  ack = write_command((SLAVE_ADDR));
+  //Serial.println(ack);
+  ack = write_command(0x40);
+  for(int8_t i=0;i<20;i++){
+    ack = write_command(data[i]);					// write byte from data array to the display.
+  }	
+  	stop_transmission();                  // end the connection, send stop.						
 }
 
-uint8_t write_i2c(uint8_t data) {
+unsigned char write_command(unsigned char *data) {
+  TWDR0 = data;
+  TWCR0 = (1 << TWINT) | (1<<TWEN);
+  while(!(TWCR0 & (1<<TWINT)));
+  return (TWSR0 & 0xF8);
+}
+unsigned char write_i2c(unsigned char *data) {
     TWDR0 = data;									// set current byte as data
     TWCR0 = (1 <<TWINT) | (1<<TWEN);				// write to lane
 	while (!(TWCR0 & (1<<TWINT)));					// wait for ack or nack
 	return (TWSR0 & 0xF8);							// Return top 5 bits of TWSR0, where the status is kept. (Gives the start, sla, data ack and nack codes.)
 }
 
+void clearScreen(void) {
+  unsigned char ack=0;
+	///*
+  start_transmission();
+  ack = write_command((SLAVE_ADDR));    // clear screen
+  ack = write_command(0x80);
+  ack = write_command(0x01);
+  stop_transmission();
+  delay_ms(10);
+  //*/
+}
+
+void setRow(uint8_t row) {
+  unsigned char ack=0;
+  //*
+
+  start_transmission();
+  if(row == 1) {
+    ack = write_command((SLAVE_ADDR)); // change address.
+    ack = write_command(0x00);
+    ack = write_command(0x80);
+
+  }
+  else {
+    ack = write_command((SLAVE_ADDR)); // change address
+    ack = write_command(0x00);
+    ack = write_command(0xC0);
+  }
+  stop_transmission();
+  delay_ms(10);
+  //*/
+}
+void setRowPlace(uint8_t row, uint8_t step) {
+  unsigned char ack = 0;
+  //*
+  start_transmission();
+  if(row  == 1) {
+    if(step < 20) {
+      step=step+0x80;
+      ack = write_command((SLAVE_ADDR));
+      ack = write_command(0x00);
+      ack = write_command(step);
+    }
+  }
+  else {
+    if(step < 20) {
+      step=step+0xc0;
+      ack = write_command((SLAVE_ADDR));
+      ack = write_command(0x00);
+      ack = write_command(step);
+    }
+  }
+  
+  //*/
+}
 #endif
