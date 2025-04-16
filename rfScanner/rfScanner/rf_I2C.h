@@ -134,52 +134,70 @@ unsigned char write_command(unsigned char data) {
 	#endif
 }
 unsigned char write_i2c(unsigned char data) {
-    TWDR0 = data;									// set current byte as data
-    TWCR0 = (1 <<TWINT) | (1<<TWEN);				// write to lane
-	while (!(TWCR0 & (1<<TWINT)));					// wait for ack or nack
-	return (TWSR0 & 0xF8);							// Return top 5 bits of TWSR0, where the status is kept. (Gives the start, sla, data ack and nack codes.)
+	#ifndef ARDUINO
+		TWDR0 = data;									// set current byte as data
+		TWCR0 = (1 <<TWINT) | (1<<TWEN);				// write to lane
+		while (!(TWCR0 & (1<<TWINT)));					// wait for ack or nack
+		return (TWSR0 & 0xF8);							// Return top 5 bits of TWSR0, where the status is kept. (Gives the start, sla, data ack and nack codes.)
+	#endif
+	#ifdef ARDUINO
+		TWDR = data;
+		TWCR = (1 << TWINT) | (1<<TWEN);
+		while(!(TWCR & (1<<TWINT)));
+	return (TWSR & 0xF8);
+#endif
 }
 
 void clearScreen(void) {
-  unsigned char ack=0;
+	unsigned char ack=0;
 	///*
-  start_transmission();
-  ack = write_command((SLAVE_ADDR));    // clear screen
-  if(ack == 0x28);
-  ack = write_command(0x80);
-  if(ack == 0x40);
-  ack = write_command(0x01);
-  if(ack == 0x40);
-  stop_transmission();
-  delay_ms(10);
+	start_transmission();
+	ack = write_command((SLAVE_ADDR));    // clear screen
+	if(ack == 0x28);
+	ack = write_command(0x80);
+	if(ack == 0x40);
+	ack = write_command(0x01);
+	if(ack == 0x40);
+	stop_transmission();
+  	#ifndef ARDUINO
+		delay_ms(10);
+		#endif
+		#ifdef ARDUINO
+		delay(10);
+	#endif
   //*/
 }
 
 void setRow(uint8_t row) {
-  unsigned char ack=0;
-  //*
+	unsigned char ack=0;
+	//*
 
-  start_transmission();
-  if(row == 1) {
-    ack = write_command((SLAVE_ADDR)); // change address.
+	start_transmission();
+	if(row == 1) {
+		ack = write_command((SLAVE_ADDR)); // change address.
 	if(ack == 0x28);
-    ack = write_command(0x00);
+		ack = write_command(0x00);
 	if(ack == 0x40);
-    ack = write_command(0x80);
+		ack = write_command(0x80);
 	if(ack == 0x40);
 
-  }
-  else {
-    ack = write_command((SLAVE_ADDR)); // change address
+	}
+	else {
+		ack = write_command((SLAVE_ADDR)); // change address
 	if(ack == 0x28);
-    ack = write_command(0x00);
+		ack = write_command(0x00);
 	if(ack == 0x40);
-    ack = write_command(0xC0);
+		ack = write_command(0xC0);
 	if(ack == 0x40);
-  }
-  stop_transmission();
-  delay_ms(10);
-  //*/
+	}
+	stop_transmission();
+	#ifndef ARDUINO
+    	delay_ms(10);
+	#endif
+	#ifdef ARDUINO
+    	delay(10);
+  	#endif
+	//*/
 }
 void setRowPlace(uint8_t row, uint8_t step) {
   unsigned char ack = 0;

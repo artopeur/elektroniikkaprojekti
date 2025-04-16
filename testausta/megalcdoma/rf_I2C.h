@@ -7,8 +7,6 @@
 #ifndef RF_I2C_H
 #define RF_I2C_H
 
-#define ARDUINO 1
-
 #ifdef ARDUINO
 
 	// Arduino includes
@@ -134,10 +132,18 @@ unsigned char write_command(unsigned char data) {
 	#endif
 }
 unsigned char write_i2c(unsigned char data) {
+  #ifndef ARDUINO
     TWDR0 = data;									// set current byte as data
     TWCR0 = (1 <<TWINT) | (1<<TWEN);				// write to lane
-	while (!(TWCR0 & (1<<TWINT)));					// wait for ack or nack
-	return (TWSR0 & 0xF8);							// Return top 5 bits of TWSR0, where the status is kept. (Gives the start, sla, data ack and nack codes.)
+	  while (!(TWCR0 & (1<<TWINT)));					// wait for ack or nack
+	  return (TWSR0 & 0xF8);							// Return top 5 bits of TWSR0, where the status is kept. (Gives the start, sla, data ack and nack codes.)
+  #endif
+  #ifdef ARDUINO
+    TWDR = data;									// set current byte as data
+    TWCR = (1 <<TWINT) | (1<<TWEN);				// write to lane
+	  while (!(TWCR & (1<<TWINT)));					// wait for ack or nack
+	  return (TWSR & 0xF8);							// Return top 5 bits of TWSR0, where the status is kept. (Gives the start, sla, data ack and nack codes.)
+  #endif
 }
 
 void clearScreen(void) {
@@ -151,7 +157,12 @@ void clearScreen(void) {
   ack = write_command(0x01);
   if(ack == 0x40);
   stop_transmission();
-  delay_ms(10);
+  #ifndef ARDUINO
+    delay_ms(10);
+  #endif
+  #ifdef ARDUINO
+    delay(10);
+  #endif
   //*/
 }
 
@@ -178,7 +189,12 @@ void setRow(uint8_t row) {
 	if(ack == 0x40);
   }
   stop_transmission();
-  delay_ms(10);
+  #ifndef ARDUINO
+    delay_ms(10);
+  #endif
+  #ifdef ARDUINO
+    delay(10);
+  #endif
   //*/
 }
 void setRowPlace(uint8_t row, uint8_t step) {
