@@ -206,3 +206,30 @@ Do we actually need CKSEL1?
 
 Clock not divided, burnout etc.
 -U lfuse:w:0xe2:m -U hfuse:w:0x99:m -U efuse:w:0xfe:m
+
+# Viikko 17
+ - Koodattuja asioita
+   - Näyttöpaneelin I2C (rf_I2C.h)
+   - Näyttöpaneelin ohjaus (rf_disp.h)
+   - Muuttujat tekstiksi (float, int)
+- 3D suunnittelu (Gearbox)
+   - Osatiedostot lisätty
+   - 3D tulostus testaukset, yllättävän kestävät PLA testitulosteet
+- Piirilevyn virheiden korjauksen suunnittelu
+  - Buck converter kontrollointia arduinolla
+
+
+  
+
+# Viikko 18
+- Koodattuja asioita
+  - Tekstin yhdistäminen
+  - Tekstin eriyttäminen
+- RF kytkennän selvittelyä
+  - Diodi väärin päin, hyppy johdon tarvitsee.
+  - Jälkipuolelle Biasointi tehdään erikseen.
+  - Näyttöpaneelilta puuttuu muutama kytkös, näistä korjaukset jalkoihin kolvaamalla.
+- Korjattuja asioita main koodissa
+  - Helpotettu testikoodien tekemistä arduinolle käyttäen h tiedostoja
+
+# Viikko 19
