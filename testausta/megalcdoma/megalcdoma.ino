@@ -7,23 +7,34 @@
   #include "/GIT/elektroniikkaprojekti/rfScanner/rfScanner/rf_adc.h"
   #include "/GIT/elektroniikkaprojekti/rfScanner/rfScanner/rf_delay_t3.h"
   #include "/GIT/elektroniikkaprojekti/rfScanner/rfScanner/rf_meas.h"
+  
 #endif
 #ifndef ARDUINO
   #include "rf_I2C.h"
   #include "rf_disp.h"
 #endif
 
+
+#include "/GIT/elektroniikkaprojekti/rfScanner/rfScanner/main.c"
+
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(19200);
+  run();
+//*
+  //Serial.begin(19200);
   //initDisp();
   //Serial.println("test");
-  initDisp();
-  Serial.println("init done.");
-  delay(10);
+  //initDisp();
+  //Serial.println("init done.");
+  //delay(10);
+  //int result = main();
+//*/
 }
 
+
+
 void loop() {
+  //int status = main();
   unsigned char buffer[20] = "data:";
   unsigned char measure[20] = "";
   volatile float data = 0.1;
