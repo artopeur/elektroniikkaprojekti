@@ -153,16 +153,16 @@ void clearScreen(void) {
 	///*
 	start_transmission();
 	ack = write_command((SLAVE_ADDR));    // clear screen
-	if(ack == 0x28);
+	//if(ack == 0x28);
 	ack = write_command(0x80);
-	if(ack == 0x40);
+	//if(ack == 0x40);
 	ack = write_command(0x01);
-	if(ack == 0x40);
+	//if(ack == 0x40);
 	stop_transmission();
   	#ifndef ARDUINO
 		delay_ms(10);
-		#endif
-		#ifdef ARDUINO
+	#endif
+	#ifdef ARDUINO
 		delay(10);
 	#endif
   //*/
@@ -175,20 +175,20 @@ void setRow(uint8_t row) {
 	start_transmission();
 	if(row == 1) {
 		ack = write_command((SLAVE_ADDR)); // change address.
-	if(ack == 0x28);
+		//if(ack == 0x28);
 		ack = write_command(0x00);
-	if(ack == 0x40);
+		//if(ack == 0x40);
 		ack = write_command(0x80);
-	if(ack == 0x40);
+		//if(ack == 0x40);
 
 	}
 	else {
 		ack = write_command((SLAVE_ADDR)); // change address
-	if(ack == 0x28);
+		//if(ack == 0x28);
 		ack = write_command(0x00);
-	if(ack == 0x40);
+		//if(ack == 0x40);
 		ack = write_command(0xC0);
-	if(ack == 0x40);
+		//if(ack == 0x40);
 	}
 	stop_transmission();
 	#ifndef ARDUINO
@@ -207,22 +207,22 @@ void setRowPlace(uint8_t row, uint8_t step) {
     if(step < 20) {
       step=step+0x80;
       ack = write_command((SLAVE_ADDR));
-	  if(ack == 0x28);
+	  //if(ack == 0x28);
       ack = write_command(0x00);
-	  if(ack == 0x40);
+	  //if(ack == 0x40);
       ack = write_command(step);
-	  if(ack == 0x40);
+	  //if(ack == 0x40);
     }
   }
   else {
     if(step < 20) {
       step=step+0xc0;
       ack = write_command((SLAVE_ADDR));
-	  if(ack == 0x28);
+	  //if(ack == 0x28);
       ack = write_command(0x00);
-	  if(ack == 0x40);
+	  //if(ack == 0x40);
       ack = write_command(step);
-	  if(ack == 0x40);
+	  //if(ack == 0x40);
     }
   }
   

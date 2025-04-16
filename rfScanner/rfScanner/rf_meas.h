@@ -11,7 +11,9 @@
 #define RF_NOISE_FLOOR 12
 #define RF_MAX_SIGNAL 255
 
-#include <stdint.h>
+#ifndef ARDUINO
+	#include <stdint.h>
+#endif
 
 float measurement(uint16_t, float);
 void reset_measurement(void);
