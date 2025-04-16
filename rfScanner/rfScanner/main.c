@@ -24,7 +24,7 @@ void test_delay(uint8_t ms);
 
 //Global variables
 
-/*
+//*
 ISR(TIMER1_COMPA_vect)
 {
   OCR1A = (ICR1* duty_cycle)/100;
@@ -54,14 +54,15 @@ int run(void) {
 	#endif
 	uint8_t rf_meas_counter = 0;
 	
-	//adc_init();
-	//timer_init();
+	adc_init();
+	timer_init();
 	init_timer3(); //stops interrupts before setting timer3, enables interrupts after that.
 	//test_delay(10);
 
 	initI2C();
 	initDisp();
 	test_delay(100);
+
     while(1)
     {
 		#ifdef ARDUINO

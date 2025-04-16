@@ -233,5 +233,9 @@ Clock not divided, burnout etc.
   - Näyttöpaneelilta puuttuu muutama kytkös, näistä korjaukset jalkoihin kolvaamalla.
 - Korjattuja asioita main koodissa
   - Helpotettu testikoodien tekemistä arduinolle käyttäen h tiedostoja
+- Ajettu megan kautta main.c ja muut tiedostot. Näyttäisi toimivan.
+  - main() funktio nimetään kun ARDUINO on olemassa nimelle run()
+  - Saatu näytölle teksti aikaiseksi ja taustalla näyttäisi juoksevan myös kaikkien osien kanssa
+  - Näytölle tulostus hidastuu kovasti kun on käytössä hakkurin ohjaus myös, mutta tulos vaihtuu kuitenkin.
 
 # Viikko 19
