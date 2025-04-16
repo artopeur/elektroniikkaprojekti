@@ -31,9 +31,12 @@ void initDisp() {
 	initI2C();
   start_transmission();
   response = write_command(SLAVE_ADDR);
+  if(response == 0x28);
   response = write_command(0x38);
+  if(response == 0x40);
   delay_ms(10);
   response=write_command(0x39);
+  if(response == 0x40)
   delay_ms(10);
   char data[7] = {0x14,0x78,0x5E, 0x6D, 0x0C, 0x01, 0x06};
   for(uint8_t n = 0; n<7;n++) {
@@ -44,7 +47,7 @@ void initDisp() {
 }
 
 void setText(uint8_t row, unsigned char *chars) {
-  uint16_t response;
+  //uint16_t response;
   //response = write_command(0);
   //setRow(row);
   write_data(chars, sizeof(chars), row);

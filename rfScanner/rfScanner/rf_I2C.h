@@ -21,8 +21,8 @@ void initI2C();
 void start_transmission();
 void stop_transmission();
 void write_data(unsigned char*, size_t, uint8_t);
-unsigned char write_i2c(unsigned char*);
-unsigned char write_command(unsigned char*);
+unsigned char write_i2c(unsigned char);
+unsigned char write_command(unsigned char);
 void clearScreen(void);
 void setRow(uint8_t);
 void setRowPlace(uint8_t, uint8_t);
@@ -84,21 +84,23 @@ void write_data(unsigned char *data, size_t len, uint8_t row) {
   //ack = write_command(0x08);
   start_transmission();                 // start connection
   ack = write_command((SLAVE_ADDR));
+  if(ack == 0x28);
   //Serial.println(ack);
   ack = write_command(0x40);
+  if(ack == 0x40);
   for(int8_t i=0;i<20;i++){
     ack = write_command(data[i]);					// write byte from data array to the display.
   }	
   	stop_transmission();                  // end the connection, send stop.						
 }
 
-unsigned char write_command(unsigned char *data) {
+unsigned char write_command(unsigned char data) {
   TWDR0 = data;
   TWCR0 = (1 << TWINT) | (1<<TWEN);
   while(!(TWCR0 & (1<<TWINT)));
   return (TWSR0 & 0xF8);
 }
-unsigned char write_i2c(unsigned char *data) {
+unsigned char write_i2c(unsigned char data) {
     TWDR0 = data;									// set current byte as data
     TWCR0 = (1 <<TWINT) | (1<<TWEN);				// write to lane
 	while (!(TWCR0 & (1<<TWINT)));					// wait for ack or nack
@@ -110,8 +112,11 @@ void clearScreen(void) {
 	///*
   start_transmission();
   ack = write_command((SLAVE_ADDR));    // clear screen
+  if(ack == 0x28);
   ack = write_command(0x80);
+  if(ack == 0x40);
   ack = write_command(0x01);
+  if(ack == 0x40);
   stop_transmission();
   delay_ms(10);
   //*/
@@ -124,14 +129,20 @@ void setRow(uint8_t row) {
   start_transmission();
   if(row == 1) {
     ack = write_command((SLAVE_ADDR)); // change address.
+	if(ack == 0x28);
     ack = write_command(0x00);
+	if(ack == 0x40);
     ack = write_command(0x80);
+	if(ack == 0x40);
 
   }
   else {
     ack = write_command((SLAVE_ADDR)); // change address
+	if(ack == 0x28);
     ack = write_command(0x00);
+	if(ack == 0x40);
     ack = write_command(0xC0);
+	if(ack == 0x40);
   }
   stop_transmission();
   delay_ms(10);
@@ -145,16 +156,22 @@ void setRowPlace(uint8_t row, uint8_t step) {
     if(step < 20) {
       step=step+0x80;
       ack = write_command((SLAVE_ADDR));
+	  if(ack == 0x28);
       ack = write_command(0x00);
+	  if(ack == 0x40);
       ack = write_command(step);
+	  if(ack == 0x40);
     }
   }
   else {
     if(step < 20) {
       step=step+0xc0;
       ack = write_command((SLAVE_ADDR));
+	  if(ack == 0x28);
       ack = write_command(0x00);
+	  if(ack == 0x40);
       ack = write_command(step);
+	  if(ack == 0x40);
     }
   }
   
