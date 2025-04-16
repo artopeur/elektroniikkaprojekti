@@ -163,31 +163,33 @@ Microchip Studio, go to "Tools" > "Device Programming", select your programmer a
 
 - **Voltage Tolerance and Safety**: Ensuring the chip remains safe when voltage spikes (up to 5.5V) and setting the brown-out to 1.8V for proper startup.
 
-## To read fuse settings
-avrdude -c arduino -p m328pb -P COM5 -b 19200 -v
-
-## To write low fuse (lfuse)
-avrdude -c arduino -p m328pb -P COM5 -b 19200 -U lfuse:w:0xXX:m
-
-## To write high fuse (hfuse)
-avrdude -c arduino -p m328pb -P COM5 -b 19200 -U hfuse:w:0xYY:m
-
-## To write extended fuse (efuse)
-avrdude -c arduino -p m328pb -P COM5 -b 19200 -U efuse:w:0xZZ:m
-
-## To flash a hex file to the chip
-avrdude -c arduino -p m328pb -P COM5 -b 19200 -U flash:w:yourfile.hex:i
-
-## To verify a hex file after flashing
-avrdude -c arduino -p m328pb -P COM5 -b 19200 -U flash:v:yourfile.hex:i
-
-## To erase flash before flashing
-avrdude -c arduino -p m328pb -P COM5 -b 19200 -e -U flash:w:yourfile.hex:i
-
-# Fuse bits
+## Fuse bits
 - **Fuse Settings**: Adjusting fuses using AVRDude, Microchip Studio, and Arduino IDE for clock and power settings (e.g., setting the clock to 1MHz, brown-out detection).
 
 - **Brown-Out Detection**: Setting the brown-out fuse and considering voltage spikes, input power range (e.g., 2V to 5.5V).
+
+**To read fuse settings**
+avrdude -c arduino -p m328pb -P COM5 -b 19200 -v
+
+**To write low fuse (lfuse)**
+avrdude -c arduino -p m328pb -P COM5 -b 19200 -U lfuse:w:0xXX:m
+
+**To write high fuse (hfuse)**
+avrdude -c arduino -p m328pb -P COM5 -b 19200 -U hfuse:w:0xYY:m
+
+**To write extended fuse (efuse)**
+avrdude -c arduino -p m328pb -P COM5 -b 19200 -U efuse:w:0xZZ:m
+
+**To flash a hex file to the chip**
+avrdude -c arduino -p m328pb -P COM5 -b 19200 -U flash:w:yourfile.hex:i
+
+**To verify a hex file after flashing**
+avrdude -c arduino -p m328pb -P COM5 -b 19200 -U flash:v:yourfile.hex:i
+
+**To erase flash before flashing**
+avrdude -c arduino -p m328pb -P COM5 -b 19200 -e -U flash:w:yourfile.hex:i
+
+
 
 
 ## Brownout
