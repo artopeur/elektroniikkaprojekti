@@ -1,6 +1,16 @@
 #include<Arduino.h>
-#include "rf_I2C.h"
-#include "rf_disp.h"
+
+
+
+#define ARDUINO 1
+#ifdef ARDUINO
+  #include "/GIT/elektroniikkaprojekti/rfScanner/rfScanner/rf_I2C.h"
+  #include "/GIT/elektroniikkaprojekti/rfScanner/rfScanner/rf_disp.h"
+#endif
+#ifndef ARDUINO
+  #include "rf_I2C.h"
+  #include "rf_disp.h"
+#endif
 
 void setup() {
   // put your setup code here, to run once:

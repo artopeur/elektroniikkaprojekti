@@ -4,8 +4,13 @@
 #ifndef RF_DISP_H
 #define RF_DISP_H
 
-//#include <avr/io.h>
-//#include <xc.h>
+// comment out if not running on arduino
+
+
+#ifndef ARDUINO
+  #include <avr/io.h>
+  #include <xc.h>
+#endif
 #include "rf_I2C.h"
 
 #define SLAVE_ADDR 0x78
@@ -32,14 +37,29 @@ void initDisp() {
   start_transmission();
   response = write_command(SLAVE_ADDR);
   response = write_command(0x38);
-  delay(10);
+  #ifndef ARDUINO
+    delay_ms(10);
+  #endif
+  #ifdef ARDUINO
+    delay(10);
+  #endif
   response=write_command(0x39);
-  delay(10);
+  #ifndef ARDUINO
+    delay_ms(10);
+  #endif
+  #ifdef ARDUINO
+    delay(10);
+  #endif
   char data[7] = {0x14,0x78,0x5E, 0x6D, 0x0C, 0x01, 0x06};
   for(uint8_t n = 0; n<7;n++) {
     response = write_command(data[n]);
   }
-  delay(10);
+  #ifndef ARDUINO
+    delay_ms(10);
+  #endif
+  #ifdef ARDUINO
+    delay(10);
+  #endif
 	stop_transmission();
 }
 
