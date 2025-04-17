@@ -23,16 +23,41 @@
 void test_delay(uint8_t ms);
 
 //Global variables
+volatile float voltage= get_input_voltage(0);
+volatile float voltage2= get_input_voltage(1);
 
 //*
 ISR(TIMER1_COMPA_vect)
 {
-  OCR1A = (ICR1* duty_cycle)/100;
-  OCR1B = (ICR1* duty_cycle2)/100;
+
+	voltage= get_input_voltage(0);
+	voltage2= get_input_voltage(1);
+
+	if(voltage>2.1)
+	{
+		if(duty_cycle<100)duty_cycle+=1;
+	}
+	if(voltage<2.1)
+	{
+		if(duty_cycle>0)duty_cycle-=1;
+	}
+	
+	//*
+	if(voltage2>2.1)
+	{
+		if(duty_cycle2<100)duty_cycle2-=1;
+	}
+	if(voltage2<2.1)
+	{
+		if(duty_cycle2>0)duty_cycle2+=1;
+	}
+	OCR1A = (ICR1* duty_cycle)/100;
+	OCR1B = (ICR1* duty_cycle2)/100;
+	
 }
 //*/
 //*
-ISR(TIMER3_COMPA_vect) {
+ISR(TIMER0_COMPA_vect) {
 	timer_count++;  // Delay counter increment.
 }
 //*/
@@ -57,28 +82,34 @@ int run(void) {
 	adc_init();
 	timer_init();
 	init_timer3(); //stops interrupts before setting timer3, enables interrupts after that.
-	//test_delay(10);
+	test_delay(10);
 
-	//initI2C();
-	//initDisp();
+	initI2C();
+	initDisp();
 	test_delay(100);
 
-	ADCSRA |= (1 << ADPS2) | (1 << ADPS1);
     while(1)
     {
 		#ifdef ARDUINO
 			//Serial.println("Testing");
 			//test_delay(100);
+			delay(1);
 		#endif
-		/*
+
+		#ifdef ARDUINO
+			//Serial.println(voltage);
+			//test_delay(1);
+		#endif
+		//*
 		unsigned char buffer[20] = "data:";
 		unsigned char measure[20] = "";
 		volatile float data = 0.1;
 		volatile float rfdata = 0.11;
 		clearScreen();
-		//*
-		//setText(1,buffer);
 		/*
+		setText(1,buffer);
+		//*/
+		//*
 		for (uint8_t i = 0; i<50;i++) {
 			if(i < 25) {
 				data = data + 0.1;
@@ -102,34 +133,17 @@ int run(void) {
 			clearBuffer(strlenCustom(buffer),buffer);
 			SplitResult bf2=split(buffer,0);
 			combine(bf2.part1,"DATA:", buffer);
-			test_delay(500);
+			test_delay(100);
 		}
 		//*/
 		//*
-		float voltage= get_input_voltage(0);
-		float voltage2= get_input_voltage(1);
-		uint16_t rfvalue = adc_read(2);
-		#ifdef ARDUINO
-			Serial.println(voltage);
-		#endif
-		if(voltage>2.1)
-		{
-		  if(duty_cycle<100)duty_cycle+=1;
-		}
-		if(voltage<2.1)
-		{
-		  if(duty_cycle>0)duty_cycle-=1;
-		}
 		
-		//*
-		if(voltage2>2.1)
-		{
-		  if(duty_cycle2<100)duty_cycle2-=1;
-		}
-		if(voltage2<2.1)
-		{
-		  if(duty_cycle2>0)duty_cycle2+=1;
-		}
+		//uint16_t rfvalue = adc_read(2);
+		#ifdef ARDUINO
+			//Serial.println(voltage);
+			//test_delay(10);
+		#endif
+		
 		//*/
 		/*
 		float rfvolts = measurement(rfvalue, voltage); // tests previous value to previous measurement and if it is larger, returns that, otherwise returns previous highest value.

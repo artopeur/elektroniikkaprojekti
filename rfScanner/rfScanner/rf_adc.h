@@ -16,9 +16,9 @@ uint16_t adc_read(uint8_t);
 float get_input_voltage(uint8_t);
 
 void timer_init() {
-  uint16_t top_value=255;
+  uint16_t top_value=199;
   cli();
-  DDRB|= (1<<PB5); //| (1<<PB6);
+  DDRB|= (1<<PB0) | (1<<PB1);
   TCCR1A= (1<<COM1A1)| (1<<COM1B1) |(1<<WGM11);
   TCCR1B= (1<<WGM13)|(1<<WGM12) | (1<<CS11);
 
@@ -38,13 +38,13 @@ void adc_init() {
 }
 
 uint16_t adc_read(uint8_t pin) {
-  cli();
+  
   pin &= 0x0F;
   ADMUX = (ADMUX & 0xF0) | pin;
   ADMUX |= (1 << REFS1) | (1 << REFS0); 
   ADCSRA |= (1 << ADSC);  
   while (ADCSRA & (1 << ADSC));
-  sei();
+  
   return ADC;  
 	
 }
