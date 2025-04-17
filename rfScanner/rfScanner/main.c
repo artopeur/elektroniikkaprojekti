@@ -94,13 +94,15 @@ int run(void) {
 			combine(buffer, measure, result);
 			clearBuffer(strlenCustom(measure),measure);
 			floatToChar(rfdata, measure,5,2);
-			combine(result, " rf:", result);
+			char extend[20] = "rf:";
+			combine(result, extend, result);
 			combine(result,measure,result);
 			setRowPlace(1,0);
 			setText(1,result);
 			clearBuffer(strlenCustom(buffer),buffer);
 			SplitResult bf2=split(buffer,0);
-			combine(bf2.part1,"DATA:", buffer);
+			char load[20] = "DATA:";
+			combine(bf2.part1,load, buffer);
 			test_delay(500);
 		}
 		//*/
