@@ -59,17 +59,18 @@ int run(void) {
 	init_timer3(); //stops interrupts before setting timer3, enables interrupts after that.
 	//test_delay(10);
 
-	initI2C();
-	initDisp();
+	//initI2C();
+	//initDisp();
 	test_delay(100);
 
+	ADCSRA |= (1 << ADPS2) | (1 << ADPS1);
     while(1)
     {
 		#ifdef ARDUINO
-			Serial.println("Testing");
-			test_delay(100);
+			//Serial.println("Testing");
+			//test_delay(100);
 		#endif
-		//*
+		/*
 		unsigned char buffer[20] = "data:";
 		unsigned char measure[20] = "";
 		volatile float data = 0.1;
@@ -77,7 +78,7 @@ int run(void) {
 		clearScreen();
 		//*
 		//setText(1,buffer);
-		//*
+		/*
 		for (uint8_t i = 0; i<50;i++) {
 			if(i < 25) {
 				data = data + 0.1;
@@ -108,7 +109,9 @@ int run(void) {
 		float voltage= get_input_voltage(0);
 		float voltage2= get_input_voltage(1);
 		uint16_t rfvalue = adc_read(2);
-	
+		#ifdef ARDUINO
+			Serial.println(voltage);
+		#endif
 		if(voltage>2.1)
 		{
 		  if(duty_cycle<100)duty_cycle+=1;
@@ -117,15 +120,18 @@ int run(void) {
 		{
 		  if(duty_cycle>0)duty_cycle-=1;
 		}
-		if(voltage2>3.2)
+		
+		//*
+		if(voltage2>2.1)
 		{
 		  if(duty_cycle2<100)duty_cycle2-=1;
 		}
-		if(voltage2<3.2)
+		if(voltage2<2.1)
 		{
 		  if(duty_cycle2>0)duty_cycle2+=1;
 		}
-		
+		//*/
+		/*
 		float rfvolts = measurement(rfvalue, voltage); // tests previous value to previous measurement and if it is larger, returns that, otherwise returns previous highest value.
 		if(rfvolts == rfvalue) {
 			// no need to update display
