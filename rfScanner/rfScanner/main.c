@@ -23,8 +23,10 @@
 void test_delay(uint8_t ms);
 
 //Global variables
-volatile float voltage= get_input_voltage(0);
-volatile float voltage2= get_input_voltage(1);
+volatile float voltage= 0.00;
+volatile float voltage2= 0.00;
+
+
 
 //*
 ISR(TIMER1_COMPA_vect)
@@ -77,7 +79,7 @@ int run(void) {
 		delay(100);
 		
 	#endif
-	uint8_t rf_meas_counter = 0;
+	uint16_t rf_meas_counter = 0;
 	
 	adc_init();
 	timer_init();
@@ -85,7 +87,8 @@ int run(void) {
 	test_delay(10);
 
 	initI2C();
-	initDisp();
+	screen.init();
+	//initDisp();
 	test_delay(100);
 
     while(1)
@@ -101,7 +104,9 @@ int run(void) {
 			//test_delay(1);
 		#endif
 		//*
-		unsigned char buffer[20] = "data:";
+		unsigned char start[6] = "data:";
+		screen.set(1,start);
+		
 		unsigned char measure[20] = "";
 		volatile float data = 0.1;
 		volatile float rfdata = 0.11;
@@ -123,17 +128,20 @@ int run(void) {
 			clearBuffer(strlenCustom(measure),measure);
 			unsigned char result [20] = "";
 			floatToChar(data,measure,5,2);
-			combine(buffer, measure, result);
+			combine(screen.buffer, measure, result);
 			clearBuffer(strlenCustom(measure),measure);
 			floatToChar(rfdata, measure,5,2);
-			char extend[20] = "rf:";
-			combine(result, extend, result);
-			combine(result,measure,result);
-			setRowPlace(1,0);
-			setText(1,result);
-			clearBuffer(strlenCustom(buffer),buffer);
-			SplitResult bf2=split(buffer,0);
-			combine(bf2.part1,"DATA:", buffer);
+			unsigned char extend[20] = "rf:";
+			screen.combine(result, extend, result);
+			screen.combine(result,measure,result);
+			screen.setRowPlace(1,0);
+			//setRowPlace(1,0);
+			screen.set(1,result);
+			screen.clearBuffer(strlenCustom(screen.buffer),screen.buffer);
+			//SplitResult bf2 = screen.split(screen.buffer,0);
+			SplitResult bf2=split(screen.buffer,0);
+			unsigned char temp[10] = "DATA:";
+			screen.combine(bf2.part1,temp, screen.buffer);
 			test_delay(100);
 		}
 		//*/
