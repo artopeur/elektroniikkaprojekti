@@ -86,7 +86,7 @@ int run(void) {
 	init_timer3(); //stops interrupts before setting timer3, enables interrupts after that.
 	test_delay(10);
 
-	initI2C();
+	screen.initI2C();
 	screen.init();
 	//initDisp();
 	test_delay(100);

@@ -35,6 +35,7 @@ typedef struct {
     void (*setRowPlace) (uint8_t row, uint8_t step);
     void (*clearBuffer)(uint8_t size, unsigned char* buffer);
     void (*clear)(void);
+    void (*initI2C)(void);
  } scr;
  
 
@@ -66,7 +67,8 @@ scr screen = {
     split,
     setRowPlace,
     clearBuffer,
-    clearScreen
+    clearScreen,
+    initI2C
 };
 
 void initDisp() {
