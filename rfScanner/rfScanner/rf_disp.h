@@ -34,6 +34,7 @@ typedef struct {
     SplitResult (*split) (unsigned char* s, int number);
     void (*setRowPlace) (uint8_t row, uint8_t step);
     void (*clearBuffer)(uint8_t size, unsigned char* buffer);
+    void (*clear)(void);
  } scr;
  
 
@@ -64,7 +65,8 @@ scr screen = {
     combine,
     split,
     setRowPlace,
-    clearBuffer
+    clearBuffer,
+    clearScreen
 };
 
 void initDisp() {

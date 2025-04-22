@@ -110,7 +110,7 @@ int run(void) {
 		unsigned char measure[20] = "";
 		volatile float data = 0.1;
 		volatile float rfdata = 0.11;
-		clearScreen();
+		screen.clear();
 		/*
 		setText(1,buffer);
 		//*/
@@ -127,10 +127,10 @@ int run(void) {
 		
 			clearBuffer(strlenCustom(measure),measure);
 			unsigned char result [20] = "";
-			floatToChar(data,measure,5,2);
-			combine(screen.buffer, measure, result);
-			clearBuffer(strlenCustom(measure),measure);
-			floatToChar(rfdata, measure,5,2);
+			screen.floatToChar(data,measure,5,2);
+			screen.combine(screen.buffer, measure, result);
+			screen.clearBuffer(strlenCustom(measure),measure);
+			screen.floatToChar(rfdata, measure,5,2);
 			unsigned char extend[20] = "rf:";
 			screen.combine(result, extend, result);
 			screen.combine(result,measure,result);
@@ -147,24 +147,28 @@ int run(void) {
 		//*/
 		//*
 		
-		//uint16_t rfvalue = adc_read(2);
+		uint16_t rfvalue = adc_read(2);
 		#ifdef ARDUINO
 			//Serial.println(voltage);
 			//test_delay(10);
 		#endif
 		
 		//*/
-		/*
-		float rfvolts = measurement(rfvalue, voltage); // tests previous value to previous measurement and if it is larger, returns that, otherwise returns previous highest value.
+		//*
+		// tests previous value to previous measurement and if it is larger, returns that, otherwise returns previous highest value.
+		float rfvolts = measurement(rfvalue, voltage); 
 		if(rfvolts == rfvalue) {
 			// no need to update display
 			rf_meas_counter++;
 		}
 		else {
 			// print rfvolts to display.
-			unsigned char text[16] = "test text";
-			
-			setText(1, text);
+			unsigned char text[16] = "test:";
+			unsigned char rfIntValue[5] = "";
+			screen.clear();
+			screen.intToChar(rfvolts, rfIntValue, 5);
+			screen.combine(text, rfIntValue, text);
+			screen.set(1, text);
 			rf_meas_counter++;
 		}		
 		if(rf_meas_counter > 200) {
