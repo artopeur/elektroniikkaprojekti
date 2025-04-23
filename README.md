@@ -259,3 +259,5 @@ Clock not divided, burnout etc.
   - Käynnistysnopeus
   - Virranhallinta ohjelmointi (??) **Lepotila? ja mikä herättää?**
   - näytön käynnistyksen hallinta? **Taustavalo?**
+
+<center><img src="./results.jpg"></center>
