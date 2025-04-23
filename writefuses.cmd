@@ -16,10 +16,13 @@ echo high =  %high%
 echo extra =  %extra%
 echo comport = %comport%
 
-echo Does this look right? crtl-c if not!!!
-pause
-echo .\arvdude\avrdude.exe -c arduino -p m328pb -P %comport% -b 19200 -U lfuse:w:%low%:m -U hfuse:w:%high%:m -U efuse:w:%extra%:m
+echo Current fuse settings...
+.\arvdude\avrdude.exe -c arduino -p m328pb -P %comport% -B 19200 -v
 
+echo Does this look right? crtl-c if not!!!
+echo .\arvdude\avrdude.exe -c arduino -p m328pb -P %comport% -B 19200 -U lfuse:w:%low%:m -U hfuse:w:%high%:m -U efuse:w:%extra%:m
+pause
+.\arvdude\avrdude.exe -c arduino -p m328pb -P %comport% -B 19200 -U lfuse:w:%low%:m -U hfuse:w:%high%:m -U efuse:w:%extra%:m
 
 goto :EOF
 
