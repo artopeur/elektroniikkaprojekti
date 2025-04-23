@@ -23,8 +23,10 @@
 void test_delay(uint8_t ms);
 
 //Global variables
-volatile float voltage= get_input_voltage(0);
-volatile float voltage2= get_input_voltage(1);
+volatile float voltage= 0.00;
+volatile float voltage2= 0.00;
+
+
 
 //*
 ISR(TIMER1_COMPA_vect)
@@ -77,15 +79,16 @@ int run(void) {
 		delay(100);
 		
 	#endif
-	uint8_t rf_meas_counter = 0;
+	uint16_t rf_meas_counter = 0;
 	
 	adc_init();
 	timer_init();
 	init_timer3(); //stops interrupts before setting timer3, enables interrupts after that.
 	test_delay(10);
 
-	initI2C();
-	initDisp();
+	screen.initI2C();
+	screen.init();
+	//initDisp();
 	test_delay(100);
 
     while(1)
@@ -101,11 +104,13 @@ int run(void) {
 			//test_delay(1);
 		#endif
 		//*
-		unsigned char buffer[20] = "data:";
+		unsigned char start[6] = "data:";
+		screen.set(1,start);
+		
 		unsigned char measure[20] = "";
 		volatile float data = 0.1;
 		volatile float rfdata = 0.11;
-		clearScreen();
+		screen.clear();
 		/*
 		setText(1,buffer);
 		//*/
@@ -122,41 +127,48 @@ int run(void) {
 		
 			clearBuffer(strlenCustom(measure),measure);
 			unsigned char result [20] = "";
-			floatToChar(data,measure,5,2);
-			combine(buffer, measure, result);
-			clearBuffer(strlenCustom(measure),measure);
-			floatToChar(rfdata, measure,5,2);
-			char extend[20] = "rf:";
-			combine(result, extend, result);
-			combine(result,measure,result);
-			setRowPlace(1,0);
-			setText(1,result);
-			clearBuffer(strlenCustom(buffer),buffer);
-			SplitResult bf2=split(buffer,0);
-			combine(bf2.part1,"DATA:", buffer);
+			screen.floatToChar(data,measure,5,2);
+			screen.combine(screen.buffer, measure, result);
+			screen.clearBuffer(strlenCustom(measure),measure);
+			screen.floatToChar(rfdata, measure,5,2);
+			unsigned char extend[20] = "rf:";
+			screen.combine(result, extend, result);
+			screen.combine(result,measure,result);
+			screen.setRowPlace(1,0);
+			//setRowPlace(1,0);
+			screen.set(1,result);
+			screen.clearBuffer(strlenCustom(screen.buffer),screen.buffer);
+			//SplitResult bf2 = screen.split(screen.buffer,0);
+			SplitResult bf2=split(screen.buffer,0);
+			unsigned char temp[10] = "DATA:";
+			screen.combine(bf2.part1,temp, screen.buffer);
 			test_delay(100);
 		}
 		//*/
 		//*
 		
-		//uint16_t rfvalue = adc_read(2);
+		uint16_t rfvalue = adc_read(2);
 		#ifdef ARDUINO
 			//Serial.println(voltage);
 			//test_delay(10);
 		#endif
 		
 		//*/
-		/*
-		float rfvolts = measurement(rfvalue, voltage); // tests previous value to previous measurement and if it is larger, returns that, otherwise returns previous highest value.
+		//*
+		// tests previous value to previous measurement and if it is larger, returns that, otherwise returns previous highest value.
+		float rfvolts = measurement(rfvalue, voltage); 
 		if(rfvolts == rfvalue) {
 			// no need to update display
 			rf_meas_counter++;
 		}
 		else {
 			// print rfvolts to display.
-			unsigned char text[16] = "test text";
-			
-			setText(1, text);
+			unsigned char text[16] = "test:";
+			unsigned char rfIntValue[5] = "";
+			screen.clear();
+			screen.intToChar(rfvolts, rfIntValue, 5);
+			screen.combine(text, rfIntValue, text);
+			screen.set(1, text);
 			rf_meas_counter++;
 		}		
 		if(rf_meas_counter > 200) {

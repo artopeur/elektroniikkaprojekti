@@ -16,9 +16,30 @@
 #define SLAVE_ADDR 0x78
 
 typedef struct {
-    char part1[20];
-    char part2[20];
+    unsigned char part1[20];
+    unsigned char part2[20];
 } SplitResult;
+
+typedef struct {
+	unsigned char row1[20];
+	unsigned char row2[20];
+	unsigned char buffer[6];
+	unsigned char part1[10];
+	unsigned char part2[10];
+    void (*set)(uint8_t row, unsigned char* text);
+    void (*init)(void);
+    void (*intToChar)(int num, unsigned char* buffer, int buffer_size);
+    void (*floatToChar)(float num, unsigned char* buffer, int buffer_size, int precision);
+    unsigned char* (*combine) (unsigned char* x, unsigned char* y, unsigned char* combined);
+    SplitResult (*split) (unsigned char* s, int number);
+    void (*setRowPlace) (uint8_t row, uint8_t step);
+    void (*clearBuffer)(uint8_t size, unsigned char* buffer);
+    void (*clear)(void);
+    void (*initI2C)(void);
+ } scr;
+ 
+
+
 
 void initDisp();
 void setText(uint8_t row, unsigned char*);
@@ -27,9 +48,28 @@ void floatToChar(float num, unsigned char* buffer, int buffer_size, int precisio
 void intToChar(int num, unsigned char* buffer, int buffer_size);
 void setRowStep(uint8_t row, uint8_t step);
 void clearBuffer(uint8_t size, unsigned char*);
-char* combine(char*, char*, char*);
-int strlenCustom(char*);
-SplitResult split(char* s, int number);
+unsigned char* combine(unsigned char*, unsigned char*, unsigned char*);
+int strlenCustom(unsigned char*);
+SplitResult split(unsigned char* s, int number);
+
+
+scr screen = {
+    "",
+    "",
+    "",
+    "",
+    "",
+    setText,
+    initDisp,
+    intToChar,
+    floatToChar,
+    combine,
+    split,
+    setRowPlace,
+    clearBuffer,
+    clearScreen,
+    initI2C
+};
 
 void initDisp() {
   uint16_t response;
@@ -68,7 +108,11 @@ void setText(uint8_t row, unsigned char *chars) {
   //uint16_t response;
   //response = write_command(0);
   //setRow(row);
-  write_data(chars, sizeof(chars), row);
+  for(int i = 0; i< 19; i++) {
+    screen.row1[i] = (chars[i] != '\0') ? chars[i]:' ';
+  }
+  screen.row1[19] = '\0';
+  write_data(chars, 19, row);
 	
 }
 
@@ -249,7 +293,7 @@ void clearBuffer(uint8_t size, unsigned char* buffer) {
 }
 
 
-char* combine(char* x, char* y, char* combined)
+unsigned char* combine(unsigned char* x, unsigned char* y, unsigned char* combined)
 {
     int length_x = strlenCustom(x);
     int length_y = strlenCustom(y);
@@ -280,7 +324,7 @@ char* combine(char* x, char* y, char* combined)
     return combined;
 }
 
-int strlenCustom(char* z) {
+int strlenCustom(unsigned char* z) {
     int length = 0;
     while (z[length] != '\0') {
         length++;
@@ -288,7 +332,7 @@ int strlenCustom(char* z) {
     return length;
 }
 
-SplitResult split(char* s, int number) {
+SplitResult split(unsigned char* s, int number) {
     SplitResult result;
 
 
@@ -322,4 +366,8 @@ SplitResult split(char* s, int number) {
 
     return result;
 }
+
+
+
+
 #endif
