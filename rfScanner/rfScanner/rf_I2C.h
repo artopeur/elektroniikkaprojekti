@@ -67,20 +67,20 @@ void initI2C() {
 	// 0xB9 TWSR0 7:0 TWS7 TWS6 TWS5 TWS4 TWS3 [ ] TWPS[1:0]
 	
 	#ifndef ARDUINO
-		TWSR0 = (1 << TWPS1) | (1<< TWPS0);		// Prescaler values, 11 = 64, 10 = 16, 01 = 4, 00 = 1
+		TWSR = (1 << TWPS1) | (1<< TWPS0);		// Prescaler values, 11 = 64, 10 = 16, 01 = 4, 00 = 1
   
 		// 0xB8 TWBR0 7:0		TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn
-		TWBR0 = 120;							// SCL FREQ = CPU_CLK / (16+2(TWBR)*(prescalerValue))		Gives 130 Hz clock
+		TWBR = 120;							// SCL FREQ = CPU_CLK / (16+2(TWBR)*(prescalerValue))		Gives 130 Hz clock
   
 		// 0xBC TWCR0 7:0 TWINT TWEA TWSTA TWSTO TWWC TWEN [ ] TWIE
-		TWCR0 = (1 << TWINT);					// Reset lane with TWINT, set's value to 1.
+		TWCR = (1 << TWINT);					// Reset lane with TWINT, set's value to 1.
 	#endif
 }
 
 void start_transmission() {
 	#ifndef ARDUINO
-		TWCR0 = (1 << TWINT) | (1<<TWSTA) | (1 << TWEN);	// Start condition
-		while(!(TWCR0 & (1 <<TWINT)));						// wait for flag to set (transmission of start condition)
+		TWCR = (1 << TWINT) | (1<<TWSTA) | (1 << TWEN);	// Start condition
+		while(!(TWCR & (1 <<TWINT)));						// wait for flag to set (transmission of start condition)
 	#endif
 	#ifdef ARDUINO
 		TWCR = (1 << TWINT) | (1<<TWSTA) | (1 << TWEN);		// Start condition
@@ -91,7 +91,7 @@ void start_transmission() {
 
 void stop_transmission() {
     #ifndef ARDUINO
-		TWCR0 = (1 << TWINT) | (1 << TWEN) | (1 << TWSTO);	// Stop the transmission, No need to wait for ack or nack.
+		TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTO);	// Stop the transmission, No need to wait for ack or nack.
 	#endif
 	#ifdef ARDUINO
 		TWCR= (1 << TWINT) | (1 << TWEN) | (1 << TWSTO);
@@ -121,10 +121,10 @@ void write_data(unsigned char *data, size_t len, uint8_t row) {
 
 unsigned char write_command(unsigned char data) {
 	#ifndef ARDUINO
-		TWDR0 = data;
-		TWCR0 = (1 << TWINT) | (1<<TWEN);
-		while(!(TWCR0 & (1<<TWINT)));
-		return (TWSR0 & 0xF8);
+		TWDR = data;
+		TWCR = (1 << TWINT) | (1<<TWEN);
+		while(!(TWCR & (1<<TWINT)));
+		return (TWSR & 0xF8);
 	#endif
 	#ifdef ARDUINO
 		TWDR = data;
@@ -135,10 +135,10 @@ unsigned char write_command(unsigned char data) {
 }
 unsigned char write_i2c(unsigned char data) {
 	#ifndef ARDUINO
-		TWDR0 = data;									// set current byte as data
-		TWCR0 = (1 <<TWINT) | (1<<TWEN);				// write to lane
-		while (!(TWCR0 & (1<<TWINT)));					// wait for ack or nack
-		return (TWSR0 & 0xF8);							// Return top 5 bits of TWSR0, where the status is kept. (Gives the start, sla, data ack and nack codes.)
+		TWDR = data;									// set current byte as data
+		TWCR = (1 <<TWINT) | (1<<TWEN);				// write to lane
+		while (!(TWCR & (1<<TWINT)));					// wait for ack or nack
+		return (TWSR & 0xF8);							// Return top 5 bits of TWSR0, where the status is kept. (Gives the start, sla, data ack and nack codes.)
 	#endif
 	#ifdef ARDUINO
 		TWDR = data;
