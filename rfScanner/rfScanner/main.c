@@ -47,11 +47,11 @@ ISR(TIMER1_COMPA_vect)
 	}
 	//*/
 	//*
-	if(voltage2>119)
+	if(voltage2>78)
 	{
 		if(duty_cycle2<100)duty_cycle2-=1;
 	}
-	if(voltage2<119)
+	if(voltage2<78)
 	{
 		if(duty_cycle2>0)duty_cycle2+=1;
 	}

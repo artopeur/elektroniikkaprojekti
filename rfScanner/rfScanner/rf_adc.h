@@ -18,7 +18,7 @@ float get_input_voltage(uint8_t);
 void timer_init() {
   uint16_t top_value=255;
   cli();
-  DDRB|= (1<<PB0) | (1<<PB1);
+  DDRB|= (1<<PB1) | (1<<PB2);
   TCCR1A= (1<<COM1A1)| (1<<COM1B1) |(1<<WGM11);
   TCCR1B= (1<<WGM13)|(1<<WGM12) | (1<<CS10);
 
