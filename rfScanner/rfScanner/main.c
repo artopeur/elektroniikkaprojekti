@@ -92,9 +92,9 @@ int run(void) {
 	DDRB &= ~(1 << PB0);
 	PORTB |= (1 << PB0);
 
-	// ADC6, ADC7
-	DDRC &= ~((1 << PC6) | (1 << PC7));        // Set PC6 and PC7 as input
-    PORTC |= (1 << PC6) | (1 << PC7);          // Enable pull-ups on PC6 and PC7
+	// ADC6, ADC7 If they are available.
+	//DDRC &= ~((1 << PC6) | (1 << PC7));        // Set PC6 and PC7 as input
+    //PORTC |= (1 << PC6) | (1 << PC7);          // Enable pull-ups on PC6 and PC7
 	
 	adc_init();
 	timer_init();
