@@ -32,16 +32,23 @@ void timer_init() {
 }
 
 void adc_init() {
-	// � Six Multiplexed Single Ended Input Channels
-	// Will need to double check this with 1MHz clock timing.
-	ADCSRA |= (1 << ADPS2) | (1 << ADPS1);
+	// moved so don't need to rechange the reference from 1.1 volts.
+  ADMUX |= (1 << REFS1) | (1 << REFS0); 
+  
+  // � Six Multiplexed Single Ended Input Channels
+	// Will need to double check this with 1MHz clock timing. (2MHz clock, prescaler 32 :: Gives  2Mhz /32 = 62.5kHz...)
+  // Should be ok now.. A bit faster A/D
+	ADCSRA |= (1 << ADPS2) | (1 << ADPS0);
+  
+  // ADDING enabling adc
+  ADCSRA |= (1 << ADEN);
+
 }
 
 uint16_t adc_read(uint8_t pin) {
   
   pin &= 0x0F;
   ADMUX = (ADMUX & 0xF0) | pin;
-  ADMUX |= (1 << REFS1) | (1 << REFS0); 
   ADCSRA |= (1 << ADSC);  
   while (ADCSRA & (1 << ADSC));
   
