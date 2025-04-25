@@ -16,16 +16,16 @@ uint16_t adc_read(uint8_t);
 float get_input_voltage(uint8_t);
 
 void timer_init() {
-  uint16_t top_value=199;
+  uint16_t top_value=255;
   cli();
   DDRB|= (1<<PB0) | (1<<PB1);
   TCCR1A= (1<<COM1A1)| (1<<COM1B1) |(1<<WGM11);
-  TCCR1B= (1<<WGM13)|(1<<WGM12) | (1<<CS11);
+  TCCR1B= (1<<WGM13)|(1<<WGM12) | (1<<CS10);
 
   ICR1= top_value;
 
   OCR1A= (ICR1*duty_cycle) / 100;
-  //OCR1B = (ICR1 * duty_cycle2) / 100;
+  OCR1B = (ICR1 * duty_cycle2) / 100;
   TIMSK1 |= (1<<OCIE1A);
 
   sei(); // Enable global interrupts
