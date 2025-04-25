@@ -6,7 +6,7 @@
  */ 
 
 //Defines
-#define F_CPU 16000000UL // 1 MHz
+#define F_CPU 2000000UL // 1 MHz
 
 //includes
 
@@ -23,33 +23,35 @@
 void test_delay(uint8_t ms);
 
 //Global variables
-volatile float voltage= 0.00;
-volatile float voltage2= 0.00;
-
-
+//volatile float voltage= 0.00;
+//volatile float voltage2= 0.00;
+volatile uint16_t voltage = 0;
+volatile uint16_t voltage2 = 0;
 
 //*
 ISR(TIMER1_COMPA_vect)
 {
 
-	voltage= get_input_voltage(0);
-	voltage2= get_input_voltage(1);
-
-	if(voltage>2.1)
+	//voltage= get_input_voltage(0);
+	//voltage2= get_input_voltage(1);
+	voltage = adc_read(0);
+	voltage2 = adc_read(1);
+	//*
+	if(voltage>67)
 	{
 		if(duty_cycle<100)duty_cycle+=1;
 	}
-	if(voltage<2.1)
+	if(voltage<67)
 	{
 		if(duty_cycle>0)duty_cycle-=1;
 	}
-	
+	//*/
 	//*
-	if(voltage2>2.1)
+	if(voltage2>119)
 	{
 		if(duty_cycle2<100)duty_cycle2-=1;
 	}
-	if(voltage2<2.1)
+	if(voltage2<119)
 	{
 		if(duty_cycle2>0)duty_cycle2+=1;
 	}
@@ -154,7 +156,7 @@ int run(void) {
 		#endif
 		
 		//*/
-		//*
+		/*
 		// tests previous value to previous measurement and if it is larger, returns that, otherwise returns previous highest value.
 		float rfvolts = measurement(rfvalue, voltage); 
 		if(rfvolts == rfvalue) {

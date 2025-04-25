@@ -78,7 +78,7 @@
 // Uncomment following line to use the old Uno style wiring
 // (using pin 11, 12 and 13 instead of the SPI header) on Leonardo, Due...
 
-// #define USE_OLD_STYLE_WIRING
+ #define USE_OLD_STYLE_WIRING
 
 #ifdef USE_OLD_STYLE_WIRING
 
@@ -141,7 +141,7 @@
 
 #define BAUDRATE 19200
 // #define BAUDRATE	115200
-// #define BAUDRATE	1000000
+// #define BAUDRATE	  
 
 
 #define HWVER 2

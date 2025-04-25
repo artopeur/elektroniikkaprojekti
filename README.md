@@ -239,3 +239,25 @@ Clock not divided, burnout etc.
   - Näytölle tulostus hidastuu kovasti kun on käytössä hakkurin ohjaus myös, mutta tulos vaihtuu kuitenkin.
 
 # Viikko 19
+ - Juotostyöt tehty
+ - Mikrokontrolleri
+   - Ohjelmointirajapinta Arduinolta
+     <table align="center" border="10">
+      <tr><td align="center">PROGRAMMING PIN<td align="center">PIN Device<td align="center">(Laitteella oikealla puolella)</tr>
+      <tr><td align="center">PIN 10  <td align="center">RESET  <td align="center">PIN 3    </tr>
+      <tr><td align="center">PIN 11  <td align="center">MOSI   <td align="center">PIN 5    </tr>
+      <tr><td align="center">PIN 12  <td align="center">MISO   <td align="center">PIN 1    </tr>
+      <tr><td align="center">PIN 13  <td align="center"> SCK   <td align="center">PIN 2    <tr>
+      <tr><td align="center">+5V     <td align="center">VCC    <td align="center"> PIN 4   </tr>
+      <tr><td align="center">GND     <td align="center">GND    <td align="center">PIN 6    </tr>
+      </table>
+- Piirilevy ohjelmointi onnistui ( tarvitaan vielä fusebittien kirjoittamiset ja testaukset / mittaukset, jotta nähdään mikä ei vielä toimi. )
+- flash.cmd siis toimii. Testattava vielä writefuses.cmd
+- Vähävirtaisuuden takia joudutaan ajamaan määrityksiä mikrokontrollerille
+  - Brownout
+  - kellojakson jakaminen 8:lla, jolloin päästään 8MHz
+  - Käynnistysnopeus
+  - Virranhallinta ohjelmointi (??) **Lepotila? ja mikä herättää?**
+  - näytön käynnistyksen hallinta? **Taustavalo?**
+
+<center><img src="./results.jpg"></center>
