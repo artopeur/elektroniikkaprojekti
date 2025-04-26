@@ -47,11 +47,11 @@ ISR(TIMER1_COMPA_vect)
 	}
 	//*/
 	//*
-	if(voltage2>119)
+	if(voltage2>78)
 	{
 		if(duty_cycle2<100)duty_cycle2-=1;
 	}
-	if(voltage2<119)
+	if(voltage2<78)
 	{
 		if(duty_cycle2>0)duty_cycle2+=1;
 	}
@@ -82,6 +82,19 @@ int run(void) {
 		
 	#endif
 	uint16_t rf_meas_counter = 0;
+	
+	// From page 62 / 294, the unconnected pins to save power consumption. They are floating after reset.
+	// Unused ports of port D
+	DDRD = 0x00;
+	PORTD = 0xFF; //set pull-up functionality.
+
+	// PB0
+	DDRB &= ~(1 << PB0);
+	PORTB |= (1 << PB0);
+
+	// ADC6, ADC7 If they are available.
+	//DDRC &= ~((1 << PC6) | (1 << PC7));        // Set PC6 and PC7 as input
+    //PORTC |= (1 << PC6) | (1 << PC7);          // Enable pull-ups on PC6 and PC7
 	
 	adc_init();
 	timer_init();
