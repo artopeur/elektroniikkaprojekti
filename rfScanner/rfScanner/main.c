@@ -6,7 +6,7 @@
  */ 
 
 //Defines
-#define F_CPU 2000000UL // 1 MHz
+#define F_CPU 16000000UL // 1 MHz
 
 //includes
 
@@ -27,6 +27,7 @@ void test_delay(uint8_t ms);
 //volatile float voltage2= 0.00;
 volatile uint16_t voltage = 0;
 volatile uint16_t voltage2 = 0;
+volatile uint16_t adccount = 0;
 
 //*
 ISR(TIMER1_COMPA_vect)
@@ -34,30 +35,8 @@ ISR(TIMER1_COMPA_vect)
 
 	//voltage= get_input_voltage(0);
 	//voltage2= get_input_voltage(1);
-	voltage = adc_read(0);
-	voltage2 = adc_read(1);
-	//*
-	if(voltage>67)
-	{
-		if(duty_cycle<100)duty_cycle+=1;
-	}
-	if(voltage<67)
-	{
-		if(duty_cycle>0)duty_cycle-=1;
-	}
-	//*/
-	//*
-	if(voltage2>78)
-	{
-		if(duty_cycle2<100)duty_cycle2-=1;
-	}
-	if(voltage2<78)
-	{
-		if(duty_cycle2>0)duty_cycle2+=1;
-	}
-	OCR1A = (ICR1* duty_cycle)/100;
-	OCR1B = (ICR1* duty_cycle2)/100;
-	
+
+
 }
 //*/
 //*
@@ -73,12 +52,15 @@ int main(void) {
 int run(void) {
 #endif
 	#ifdef ARDUINO
-		Serial.begin(19200);
+		Serial.begin(115200);
 		//initDisp();
 		//Serial.println("test");
-		//initDisp();
+		initI2C();
+		test_delay(20);
+		initDisp();
 		Serial.println("init done.");
 		delay(100);
+		
 		
 	#endif
 	uint16_t rf_meas_counter = 0;
@@ -89,48 +71,130 @@ int run(void) {
 	PORTD = 0xFF; //set pull-up functionality.
 
 	// PB0
-	DDRB &= ~(1 << PB0);
-	PORTB |= (1 << PB0);
+	//DDRB &= ~(1 << PB0);
+	//PORTB |= (1 << PB0);
 
 	// ADC6, ADC7 If they are available.
 	//DDRC &= ~((1 << PC6) | (1 << PC7));        // Set PC6 and PC7 as input
     //PORTC |= (1 << PC6) | (1 << PC7);          // Enable pull-ups on PC6 and PC7
-	
-	adc_init();
-	timer_init();
 	init_timer3(); //stops interrupts before setting timer3, enables interrupts after that.
+	adc_init();
 	test_delay(10);
+	timer_init(); // STOPS ALL ACTIVITY WHEN
 
-	screen.initI2C();
-	screen.init();
+	#ifdef ARDUINO
+		Serial.println("ADC INIT DONE");
+	#endif
+	//uint16_t temp = adc_read(2);
+	//test_delay(10);
+	//temp = adc_read(3);
+	test_delay(1);
+	//timer_init();
+	#ifdef ARDUINO
+		Serial.println("TIMER INIT DONE");
+	#endif
+	//test_delay(1);
+	
+	test_delay(1);
+
+	//screen.initI2C();
+	//screen.init();
 	//initDisp();
-	test_delay(100);
+	
+	//initI2C();
 
+	test_delay(10);
+	#ifdef ARDUINO
+		Serial.println("I2C INIT DONE");
+	#endif
+	
+	//test_delay(100);
+	adc_init();
+	test_delay(100);
     while(1)
     {
-		#ifdef ARDUINO
-			//Serial.println("Testing");
-			//test_delay(100);
-			delay(1);
-		#endif
+		test_delay(10);
 
+		voltage = adc_read(0);
+		voltage2 = adc_read(1);
+		#ifdef ARDUINO
+			Serial.println("timer1");
+		#endif
+	
+		//*
+		if(voltage>35)
+		{
+			if(duty_cycle<100)duty_cycle+=1;
+		}
+		if(voltage<35)
+		{
+			if(duty_cycle>0)duty_cycle-=1;
+		}
+		//*/
+		//*
+		if(voltage2>54)
+		{
+			if(duty_cycle2<100)duty_cycle2-=1;
+		}
+		if(voltage2<54)
+		{
+			if(duty_cycle2>0)duty_cycle2+=1;
+		}
+		OCR1A = (ICR1* duty_cycle)/100;
+		OCR1B = (ICR1* duty_cycle2)/100;
+		//test_delay(10);
+		/*if(adccount >= 100) {
+			adccount = 0;
+		}
+		*/
+			
+			//delay(1);
+		
 		#ifdef ARDUINO
 			//Serial.println(voltage);
 			//test_delay(1);
 		#endif
 		//*
 		unsigned char start[6] = "data:";
-		screen.set(1,start);
+		//screen.set(1,start);
 		
 		unsigned char measure[20] = "";
-		volatile float data = 0.1;
-		volatile float rfdata = 0.11;
-		screen.clear();
+		uint16_t volts = 0;
+		//volatile float data = 0.1;
+		//volatile float rfdata = 0.11;
+		//screen.clear();
+		#ifdef ADRUINO
+			Serial.println("Testing");
+		#endif
+		//test_delay(10);
 		/*
 		setText(1,buffer);
 		//*/
 		//*
-		for (uint8_t i = 0; i<50;i++) {
+		uint16_t rfvalue = adc_read(3);
+		//voltage = adc_read(1);
+		//voltage2 = adc_read(2);
+		#ifdef ARDUINO
+
+			Serial.print("RFval: ");
+			Serial.println(rfvalue);
+			Serial.print("voltage: ");
+			Serial.println(voltage);
+			Serial.print("voltage2: ");
+			Serial.println(voltage2);
+			Serial.print("      ADCcount: ");
+			Serial.println(adccount);
+			Serial.print("      DUTY Cycle:");
+			Serial.println(duty_cycle);
+			Serial.print("      DUTY Cycle2:");
+			Serial.println(duty_cycle2);
+
+		#endif
+			//test_delay(10);
+		
+		//*/
+		/*
+		
 			if(i < 25) {
 				data = data + 0.1;
 				rfdata = rfdata+0.11;
@@ -139,34 +203,26 @@ int run(void) {
 				data=data - 0.1;
 				rfdata=rfdata-0.11;
 			}
-		
+			
+			volts++;
 			clearBuffer(strlenCustom(measure),measure);
 			unsigned char result [20] = "";
-			screen.floatToChar(data,measure,5,2);
-			screen.combine(screen.buffer, measure, result);
-			screen.clearBuffer(strlenCustom(measure),measure);
-			screen.floatToChar(rfdata, measure,5,2);
+			floatToChar(data,measure,5,2);
+			combine(result, measure, result);
+			clearBuffer(strlenCustom(measure),measure);
+			floatToChar(rfdata, measure,5,2);
 			unsigned char extend[20] = "rf:";
-			screen.combine(result, extend, result);
-			screen.combine(result,measure,result);
-			screen.setRowPlace(1,0);
-			//setRowPlace(1,0);
-			screen.set(1,result);
-			screen.clearBuffer(strlenCustom(screen.buffer),screen.buffer);
-			//SplitResult bf2 = screen.split(screen.buffer,0);
-			SplitResult bf2=split(screen.buffer,0);
+			combine(result, extend, result);
+			combine(result,measure,result);
+			setRowPlace(1,0);
+			setRowPlace(1,0);
+			setText(1,result);
+			clearBuffer(strlenCustom(measure), result);
+			SplitResult bf2 = screen.split(screen.buffer,0);
+			SplitResult bf2=split(result,0);
 			unsigned char temp[10] = "DATA:";
-			screen.combine(bf2.part1,temp, screen.buffer);
-			test_delay(100);
-		}
-		//*/
-		//*
-		
-		uint16_t rfvalue = adc_read(2);
-		#ifdef ARDUINO
-			//Serial.println(voltage);
-			//test_delay(10);
-		#endif
+			combine(bf2.part1,temp, result);
+			test_delay(10);
 		
 		//*/
 		/*

@@ -5,7 +5,7 @@
 #define RF_DISP_H
 
 // comment out if not running on arduino
- //#define ARDUINO
+
 
 #ifndef ARDUINO
   #include <avr/io.h>
@@ -16,30 +16,9 @@
 #define SLAVE_ADDR 0x78
 
 typedef struct {
-    unsigned char part1[20];
-    unsigned char part2[20];
+    char part1[20];
+    char part2[20];
 } SplitResult;
-
-typedef struct {
-	unsigned char row1[20];
-	unsigned char row2[20];
-	unsigned char buffer[6];
-	unsigned char part1[10];
-	unsigned char part2[10];
-    void (*set)(uint8_t row, unsigned char* text);
-    void (*init)(void);
-    void (*intToChar)(int num, unsigned char* buffer, int buffer_size);
-    void (*floatToChar)(float num, unsigned char* buffer, int buffer_size, int precision);
-    unsigned char* (*combine) (unsigned char* x, unsigned char* y, unsigned char* combined);
-    SplitResult (*split) (unsigned char* s, int number);
-    void (*setRowPlace) (uint8_t row, uint8_t step);
-    void (*clearBuffer)(uint8_t size, unsigned char* buffer);
-    void (*clear)(void);
-    void (*initI2C)(void);
- } scr;
- 
-
-
 
 void initDisp();
 void setText(uint8_t row, unsigned char*);
@@ -48,35 +27,15 @@ void floatToChar(float num, unsigned char* buffer, int buffer_size, int precisio
 void intToChar(int num, unsigned char* buffer, int buffer_size);
 void setRowStep(uint8_t row, uint8_t step);
 void clearBuffer(uint8_t size, unsigned char*);
-unsigned char* combine(unsigned char*, unsigned char*, unsigned char*);
-int strlenCustom(unsigned char*);
-SplitResult split(unsigned char* s, int number);
-
-
-scr screen = {
-    "",
-    "",
-    "",
-    "",
-    "",
-    setText,
-    initDisp,
-    intToChar,
-    floatToChar,
-    combine,
-    split,
-    setRowPlace,
-    clearBuffer,
-    clearScreen,
-    initI2C
-};
+char* combine(char*, char*, char*);
+int strlenCustom(char*);
+SplitResult split(char* s, int number);
 
 void initDisp() {
   uint16_t response;
 	initI2C();
   start_transmission();
   response = write_command(SLAVE_ADDR);
-  if(response == 0x28);
   response = write_command(0x38);
   #ifndef ARDUINO
     delay_ms(10);
@@ -105,14 +64,10 @@ void initDisp() {
 }
 
 void setText(uint8_t row, unsigned char *chars) {
-  //uint16_t response;
+  uint16_t response;
   //response = write_command(0);
   //setRow(row);
-  for(int i = 0; i< 19; i++) {
-    screen.row1[i] = (chars[i] != '\0') ? chars[i]:' ';
-  }
-  screen.row1[19] = '\0';
-  write_data(chars, 19, row);
+  write_data(chars, sizeof(chars), row);
 	
 }
 
@@ -293,7 +248,7 @@ void clearBuffer(uint8_t size, unsigned char* buffer) {
 }
 
 
-unsigned char* combine(unsigned char* x, unsigned char* y, unsigned char* combined)
+char* combine(char* x, char* y, char* combined)
 {
     int length_x = strlenCustom(x);
     int length_y = strlenCustom(y);
@@ -324,7 +279,7 @@ unsigned char* combine(unsigned char* x, unsigned char* y, unsigned char* combin
     return combined;
 }
 
-int strlenCustom(unsigned char* z) {
+int strlenCustom(char* z) {
     int length = 0;
     while (z[length] != '\0') {
         length++;
@@ -332,7 +287,7 @@ int strlenCustom(unsigned char* z) {
     return length;
 }
 
-SplitResult split(unsigned char* s, int number) {
+SplitResult split(char* s, int number) {
     SplitResult result;
 
 
@@ -366,8 +321,4 @@ SplitResult split(unsigned char* s, int number) {
 
     return result;
 }
-
-
-
-
 #endif

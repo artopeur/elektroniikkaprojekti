@@ -7,8 +7,6 @@
 #ifndef RF_I2C_H
 #define RF_I2C_H
 
-//#define ARDUINO 1
-
 #ifdef ARDUINO
 
 	// Arduino includes
@@ -60,20 +58,20 @@ void setRowPlace(uint8_t, uint8_t);
 
 void initI2C() {
 	#ifdef ARDUINO
-		TWSR = (1 << TWPS1) | (0<<TWPS0); // prescalers
+		TWSR = (1 << TWPS1) | (1<<TWPS0); // prescalers
 		TWBR = 180;                 // 518 hz prescaler 16
 		TWCR = (1 << TWINT);
 	#endif
 	// 0xB9 TWSR0 7:0 TWS7 TWS6 TWS5 TWS4 TWS3 [ ] TWPS[1:0]
 	
 	#ifndef ARDUINO
-		TWSR = (1 << TWPS1) | (1<< TWPS0);		// Prescaler values, 11 = 64, 10 = 16, 01 = 4, 00 = 1
+		TWSR0 = (1 << TWPS1) | (1<< TWPS0);		// Prescaler values, 11 = 64, 10 = 16, 01 = 4, 00 = 1
   
 		// 0xB8 TWBR0 7:0		TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn
-		TWBR = 120;							// SCL FREQ = CPU_CLK / (16+2(TWBR)*(prescalerValue))		Gives 130 Hz clock
+		TWBR0 = 120;							// SCL FREQ = CPU_CLK / (16+2(TWBR)*(prescalerValue))		Gives 130 Hz clock
   
 		// 0xBC TWCR0 7:0 TWINT TWEA TWSTA TWSTO TWWC TWEN [ ] TWIE
-		TWCR = (1 << TWINT);					// Reset lane with TWINT, set's value to 1.
+		TWCR0 = (1 << TWINT);					// Reset lane with TWINT, set's value to 1.
 	#endif
 }
 
@@ -134,70 +132,70 @@ unsigned char write_command(unsigned char data) {
 	#endif
 }
 unsigned char write_i2c(unsigned char data) {
-	#ifndef ARDUINO
-		TWDR = data;									// set current byte as data
-		TWCR = (1 <<TWINT) | (1<<TWEN);				// write to lane
-		while (!(TWCR & (1<<TWINT)));					// wait for ack or nack
-		return (TWSR & 0xF8);							// Return top 5 bits of TWSR0, where the status is kept. (Gives the start, sla, data ack and nack codes.)
-	#endif
-	#ifdef ARDUINO
-		TWDR = data;
-		TWCR = (1 << TWINT) | (1<<TWEN);
-		while(!(TWCR & (1<<TWINT)));
-	return (TWSR & 0xF8);
-#endif
+  #ifndef ARDUINO
+    TWDR = data;									// set current byte as data
+    TWCR = (1 <<TWINT) | (1<<TWEN);				// write to lane
+	  while (!(TWCR & (1<<TWINT)));					// wait for ack or nack
+	  return (TWSR & 0xF8);							// Return top 5 bits of TWSR0, where the status is kept. (Gives the start, sla, data ack and nack codes.)
+  #endif
+  #ifdef ARDUINO
+    TWDR = data;									// set current byte as data
+    TWCR = (1 <<TWINT) | (1<<TWEN);				// write to lane
+	  while (!(TWCR & (1<<TWINT)));					// wait for ack or nack
+	  return (TWSR & 0xF8);							// Return top 5 bits of TWSR0, where the status is kept. (Gives the start, sla, data ack and nack codes.)
+  #endif
 }
 
 void clearScreen(void) {
-	unsigned char ack=0;
+  unsigned char ack=0;
 	///*
-	start_transmission();
-	ack = write_command((SLAVE_ADDR));    // clear screen
-	//if(ack == 0x28);
-	ack = write_command(0x80);
-	//if(ack == 0x40);
-	ack = write_command(0x01);
-	//if(ack == 0x40);
-	stop_transmission();
-  	#ifndef ARDUINO
-		delay_ms(10);
-	#endif
-	#ifdef ARDUINO
-		delay(10);
-	#endif
+  start_transmission();
+  ack = write_command((SLAVE_ADDR));    // clear screen
+  if(ack == 0x28);
+  ack = write_command(0x80);
+  if(ack == 0x40);
+  ack = write_command(0x01);
+  if(ack == 0x40);
+  stop_transmission();
+  #ifndef ARDUINO
+    delay_ms(10);
+  #endif
+  #ifdef ARDUINO
+    delay(10);
+  #endif
   //*/
 }
 
 void setRow(uint8_t row) {
-	unsigned char ack=0;
-	//*
+  unsigned char ack=0;
+  //*
 
-	start_transmission();
-	if(row == 1) {
-		ack = write_command((SLAVE_ADDR)); // change address.
-		//if(ack == 0x28);
-		ack = write_command(0x00);
-		//if(ack == 0x40);
-		ack = write_command(0x80);
-		//if(ack == 0x40);
+  start_transmission();
+  if(row == 1) {
+    ack = write_command((SLAVE_ADDR)); // change address.
+	if(ack == 0x28);
+    ack = write_command(0x00);
+	if(ack == 0x40);
+    ack = write_command(0x80);
+	if(ack == 0x40);
 
-	}
-	else {
-		ack = write_command((SLAVE_ADDR)); // change address
-		//if(ack == 0x28);
-		ack = write_command(0x00);
-		//if(ack == 0x40);
-		ack = write_command(0xC0);
-		//if(ack == 0x40);
-	}
-	stop_transmission();
-	#ifndef ARDUINO
-    	delay_ms(10);
-	#endif
-	#ifdef ARDUINO
-    	delay(10);
-  	#endif
-	//*/
+  }
+  else {
+    ack = write_command((SLAVE_ADDR)); // change address
+	if(ack == 0x28);
+    ack = write_command(0x00);
+	if(ack == 0x40);
+    ack = write_command(0xC0);
+	if(ack == 0x40);
+  }
+  stop_transmission();
+  #ifndef ARDUINO
+    delay_ms(10);
+  #endif
+  #ifdef ARDUINO
+    delay(10);
+  #endif
+  //*/
 }
 void setRowPlace(uint8_t row, uint8_t step) {
   unsigned char ack = 0;
@@ -207,22 +205,22 @@ void setRowPlace(uint8_t row, uint8_t step) {
     if(step < 20) {
       step=step+0x80;
       ack = write_command((SLAVE_ADDR));
-	  //if(ack == 0x28);
+	  if(ack == 0x28);
       ack = write_command(0x00);
-	  //if(ack == 0x40);
+	  if(ack == 0x40);
       ack = write_command(step);
-	  //if(ack == 0x40);
+	  if(ack == 0x40);
     }
   }
   else {
     if(step < 20) {
       step=step+0xc0;
       ack = write_command((SLAVE_ADDR));
-	  //if(ack == 0x28);
+	  if(ack == 0x28);
       ack = write_command(0x00);
-	  //if(ack == 0x40);
+	  if(ack == 0x40);
       ack = write_command(step);
-	  //if(ack == 0x40);
+	  if(ack == 0x40);
     }
   }
   
