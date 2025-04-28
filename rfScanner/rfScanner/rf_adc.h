@@ -8,7 +8,7 @@
   #include <avr/interrupt.h>
 #endif
 volatile uint8_t duty_cycle = 50;
-volatile uint8_t duty_cycle2 = 0;
+volatile uint8_t duty_cycle2 = 50;
 // Introduce all functions
 void timer_init();
 void adc_init();

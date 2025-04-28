@@ -97,10 +97,11 @@ int run(void) {
 	
 	test_delay(1);
 
-	//screen.initI2C();
-	//screen.init();
-	//initDisp();
+	/*
+	initI2C();
 	
+	initDisp();
+	//*/
 	//initI2C();
 
 	test_delay(10);
@@ -113,33 +114,34 @@ int run(void) {
 	test_delay(100);
     while(1)
     {
-		test_delay(10);
+		test_delay(100);
 
-		voltage = adc_read(0);
-		voltage2 = adc_read(1);
+		voltage = adc_read(1);
+		voltage2 = adc_read(2);
 		#ifdef ARDUINO
 			Serial.println("timer1");
 		#endif
 	
 		//*
-		if(voltage>35)
+		if(voltage>50)
 		{
 			if(duty_cycle<100)duty_cycle+=1;
 		}
-		if(voltage<35)
+		if(voltage<50)
 		{
 			if(duty_cycle>0)duty_cycle-=1;
 		}
 		//*/
 		//*
-		if(voltage2>54)
+		if(voltage2<119)
 		{
-			if(duty_cycle2<100)duty_cycle2-=1;
+			if(duty_cycle2<100)duty_cycle2+=1;
 		}
-		if(voltage2<54)
+		if(voltage2>119)
 		{
-			if(duty_cycle2>0)duty_cycle2+=1;
+			if(duty_cycle2>0)duty_cycle2-=1;
 		}
+		
 		OCR1A = (ICR1* duty_cycle)/100;
 		OCR1B = (ICR1* duty_cycle2)/100;
 		//test_delay(10);
