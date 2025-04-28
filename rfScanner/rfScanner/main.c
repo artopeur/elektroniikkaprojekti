@@ -55,9 +55,9 @@ int run(void) {
 		Serial.begin(115200);
 		//initDisp();
 		//Serial.println("test");
-		initI2C();
+		//initI2C();
 		test_delay(20);
-		initDisp();
+		//initDisp();
 		Serial.println("init done.");
 		delay(100);
 		
