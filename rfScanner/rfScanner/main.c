@@ -27,6 +27,7 @@ void test_delay(uint8_t ms);
 void timer_init();
 void adc_init();
 uint16_t adc_read(uint8_t);
+float get_input_voltage(uint8_t);
 
 
 //Global variables
@@ -47,7 +48,7 @@ ISR(TIMER1_COMPA_vect)
 	//voltage= get_input_voltage(0);
 	//voltage2= get_input_voltage(1);
 
-
+	
 }
 //*/
 //*
@@ -97,29 +98,29 @@ int run(void) {
 	#ifdef ARDUINO
 		Serial.println("---ADC INIT DONE----");
 	#endif
-	test_delay(1000);
+	//test_delay(1000);
 	//timer_init(); // STOPS ALL ACTIVITY WHEN
 	
 	#ifdef ARDUINO
 		Serial.println("----TIMER INIT DONE----");
-		test_delay(1000);
+		//test_delay(1000);
 	#endif
 
 	initI2C();
 	#ifdef ARDUINO
 		Serial.println("----I2C INIT DONE----");
-		test_delay(1000);
+		//test_delay(1000);
 	#endif
 
 	timer_init();
 	#ifdef ARDUINO
 		Serial.println("----BUCK INIT DONE----");
-		test_delay(1000);
+		//test_delay(1000);
 	#endif
 	initDisp();
 	#ifdef ARDUINO
 		Serial.println("----DISP INIT DONE----");
-		test_delay(1000);
+		//test_delay(1000);
 	#endif
 
 	uint8_t i=0;
@@ -130,13 +131,13 @@ int run(void) {
 		
 		//OCR1B = (ICR1* duty_cycle2)/100;
 		//*
-		if(voltage>60)
+		if(voltage>260)
 		{
 			if(duty_cycle<100){
 				duty_cycle+=1;
 			}
 		}
-		if(voltage<60)
+		if(voltage<260)
 		{
 			if(duty_cycle>0){
 				duty_cycle-=1;
@@ -197,30 +198,34 @@ int run(void) {
 		}
 		test_delay(10);
 		*/
+	//*
 		display_counter++;
 		if (display_counter >= 5000) { // 250 loops × 2ms = 500ms
 			display_counter = 0;
 
-			unsigned char start[10] = "data:";
+			unsigned char start[20] = "data:";
 			unsigned char measure[20] = "";
 			unsigned char result[30] = "";
+			//float volts = get_input_voltage(0);
 
 			intToChar(voltage, measure, 10);  // Convert voltage to char array
-			combine(start, measure, result);  // Combine "data:" + voltage
-			setText(1, result);  // Update display
-
-			// You can also print duty cycle if you want
-			#ifdef ARDUINO
-				Serial.print("Duty cycle: ");
-				Serial.println(duty_cycle);
-			#endif
+			//combine(start, measure, result);  // Combine "data:" + voltage
+			setRow(1);
+			setText(1, measure);  // Update display
 			
-			#ifdef ARDUINO
-				Serial.println(voltage);
-				test_delay(1);
-			#endif
+			// You can also print duty cycle if you want
+			//#ifdef ARDUINO
+			//	Serial.print("Duty cycle: ");
+			//	Serial.println(duty_cycle);
+			//#endif
+			
+			//#ifdef ARDUINO
+			//	Serial.println(voltage);
+			//	test_delay(1);
+			//#endif
+			
 		}
-		
+	//*/
 		/*
 		clearBuffer(strlenCustom(measure),measure);
 		unsigned char result [20] = "";
@@ -316,13 +321,14 @@ void timer_init() {
 	#ifdef ARDUINO
 	  TCCR1A= (1<<COM1A1)|(1<<WGM11);
 	  TCCR1B= (1<<WGM13)|(1<<WGM12) | (1<<CS11);
+	  ICR1 = top_value;
 	#endif
 	#ifndef ARDUINO
 	  // poistettu välistä (1<<COM1B1)
 	  TCCR1A= (1<<COM1A1)| (1<<WGM11);
 	  TCCR1B= (1<<WGM13)|(1<<WGM12) | (1<<CS11);
   
-	  ICR1= 199;
+	  ICR1= top_value;
   
 	#endif
 	OCR1A= (ICR1* duty_cycle) / 100;
@@ -334,6 +340,9 @@ void timer_init() {
   }
   
 void adc_init() {
+	  
+  // ADDING enabling adc
+  ADCSRA |= (1 << ADEN);
 	// moved so don't need to rechange the reference from 1.1 volts.
   ADMUX |= (1 << REFS1) | (1 << REFS0); 
   
@@ -341,9 +350,7 @@ void adc_init() {
 	// Will need to double check this with 1MHz clock timing. (2MHz clock, prescaler 32 :: Gives  2Mhz /32 = 62.5kHz...)
   // Should be ok now.. A bit faster A/D
 	ADCSRA |= (1 << ADPS2) | (1 << ADPS1);
-  
-  // ADDING enabling adc
-  ADCSRA |= (1 << ADEN);
+
 
 }
 
@@ -358,3 +365,14 @@ uint16_t adc_read(uint8_t pin) {
   return ADC;  
 	
 }
+
+
+
+
+//*
+float get_input_voltage(uint8_t pin) {
+	uint16_t adc_value = adc_read(pin);  // Read ADC channel 0
+	float voltage = adc_value *  (1.1/ 1023.0);  // Convert ADC to voltage
+	return (120.99/21.99)*voltage;  // Scale back to input voltage
+}
+//*/

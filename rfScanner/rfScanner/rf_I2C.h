@@ -65,10 +65,10 @@ void initI2C() {
 	// 0xB9 TWSR0 7:0 TWS7 TWS6 TWS5 TWS4 TWS3 [ ] TWPS[1:0]
 	
 	#ifndef ARDUINO
-		TWSR = (1 << TWPS1) | (1<< TWPS0);		// Prescaler values, 11 = 64, 10 = 16, 01 = 4, 00 = 1
+		TWSR = (1 << TWPS1) | !(1<< TWPS0);		// Prescaler values, 11 = 64, 10 = 16, 01 = 4, 00 = 1
   
 		// 0xB8 TWBR0 7:0		TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn TWBRn
-		TWBR = 120;							// SCL FREQ = CPU_CLK / (16+2(TWBR)*(prescalerValue))		Gives 130 Hz clock
+		TWBR = 280;							// SCL FREQ = CPU_CLK / (16+2(TWBR)*(prescalerValue))		Gives 130 Hz clock
   
 		// 0xBC TWCR0 7:0 TWINT TWEA TWSTA TWSTO TWWC TWEN [ ] TWIE
 		TWCR = (1 << TWINT);					// Reset lane with TWINT, set's value to 1.

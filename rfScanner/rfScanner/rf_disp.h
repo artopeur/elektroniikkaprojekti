@@ -12,6 +12,7 @@
   #include <xc.h>
 #endif
 #include "rf_I2C.h"
+#include "rf_delay_t3.h"
 
 #define SLAVE_ADDR 0x78
 
@@ -24,7 +25,7 @@ void initDisp();
 void setText(uint8_t row, unsigned char*);
 void setbacklight(volatile uint8_t backlight);
 void floatToChar(float num, unsigned char* buffer, int buffer_size, int precision);
-void intToChar(int num, unsigned char* buffer, int buffer_size);
+void intToChar(uint16_t num, unsigned char* buffer, uint8_t buffer_size);
 void setRowStep(uint8_t row, uint8_t step);
 void clearBuffer(uint8_t size, unsigned char*);
 char* combine(char*, char*, char*);
@@ -41,14 +42,14 @@ void initDisp() {
     delay_ms(10);
   #endif
   #ifdef ARDUINO
-    delay(10);
+    delay_ms(10);
   #endif
   response=write_command(0x39);
   #ifndef ARDUINO
     delay_ms(10);
   #endif
   #ifdef ARDUINO
-    delay(10);
+    delay_ms(10);
   #endif
   char data[7] = {0x14,0x78,0x5E, 0x6D, 0x0C, 0x01, 0x06};
   for(uint8_t n = 0; n<7;n++) {
@@ -58,7 +59,7 @@ void initDisp() {
     delay_ms(10);
   #endif
   #ifdef ARDUINO
-    delay(10);
+    delay_ms(10);
   #endif
 	stop_transmission();
 }
@@ -75,17 +76,17 @@ void setbacklight(volatile uint8_t backlight) {
 	
 }
 
-void intToChar(int num, unsigned char* buffer, int buffer_size) {
+void intToChar(uint16_t num, unsigned char* buffer, uint8_t buffer_size) {
   // Handle negative numbers
-  int is_negative = 0;
+  uint8_t is_negative = 0;
   if (num < 0) {
       is_negative = 1;
       num = -num;
   }
   
   // Find the end position for the string
-  int i = 0;
-  int temp = num;
+  uint8_t i = 0;
+  uint8_t temp = num;
   
   // Count digits
   do {
@@ -101,7 +102,7 @@ void intToChar(int num, unsigned char* buffer, int buffer_size) {
   // Make sure the buffer is large enough
   if (i >= buffer_size) {
       // Not enough space, fill with error indicator
-      for (int j = 0; j < buffer_size - 1; j++) {
+      for (uint8_t j = 0; j < buffer_size - 1; j++) {
           buffer[j] = 'E';
       }
       buffer[buffer_size - 1] = '\0';
@@ -112,7 +113,7 @@ void intToChar(int num, unsigned char* buffer, int buffer_size) {
   buffer[i] = '\0';
   
   // Fill the buffer from right to left
-  int idx = i - 1;
+  uint8_t idx = i - 1;
   
   // Handle the case when num is 0
   if (num == 0) {
