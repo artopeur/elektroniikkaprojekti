@@ -106,9 +106,10 @@ void write_data(unsigned char *data, size_t len, uint8_t row) {
   start_transmission();                 // start connection
   ack = write_command((SLAVE_ADDR));
   if(ack == 0x28);
-	#ifdef ARDUINO
+	/*#ifdef ARDUINO
 		Serial.println(ack);
 	#endif
+  */
   ack = write_command(0x40);
   if(ack == 0x40);
   for(int8_t i=0;i<20;i++){

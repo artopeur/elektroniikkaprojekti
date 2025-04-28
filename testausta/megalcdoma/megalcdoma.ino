@@ -1,4 +1,4 @@
-#include<Arduino.h>
+//#include<Arduino.h>
 
 #define ARDUINO 1
 #ifdef ARDUINO
